@@ -5,7 +5,8 @@ use gpui::{
     ElementId, GlobalElementId, Hitbox, HitboxBehavior, InspectorElementId, InteractiveElement,
     IntoElement, LayoutId, Length, MouseDownEvent, MouseMoveEvent, MouseUpEvent, ParentElement,
     Pixels, Point, RenderOnce, ScrollHandle, Stateful, StatefulInteractiveElement, Style, Styled,
-    UniformList, UniformListScrollHandle, Window, div, point, px, quad, size, transparent_black,
+    UniformList, UniformListScrollHandle, Window, div, point, px, quad, rgb, size,
+    transparent_black,
 };
 use std::cell::RefCell;
 use std::panic::Location;
@@ -74,25 +75,31 @@ impl RenderOnce for ScrollbarContainer {
     fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
             .id("scrollbar-container")
-            .flex()
-            .flex_col()
             .size_full()
             .child(
                 div()
-                    .flex()
-                    .flex_grow()
-                    .child(div().flex_grow())
+                    .absolute()
+                    .left_0()
+                    .right_0()
+                    .bottom_0()
+                    .child(Scrollbar {
+                        id: "horizontal".into(),
+                        orientation: ScrollbarOrientation::Horizontal,
+                        handle: self.handle.clone(),
+                    }),
+            )
+            .child(
+                div()
+                    .absolute()
+                    .top_0()
+                    .right_0()
+                    .bottom_0()
                     .child(Scrollbar {
                         id: "vertical".into(),
                         orientation: ScrollbarOrientation::Vertical,
                         handle: self.handle.clone(),
                     }),
             )
-            .child(Scrollbar {
-                id: "horizontal".into(),
-                orientation: ScrollbarOrientation::Horizontal,
-                handle: self.handle.clone(),
-            })
     }
 }
 
@@ -189,8 +196,10 @@ impl Element for Scrollbar {
             ScrollbarOrientation::Vertical => {
                 style.size.width =
                     Length::Definite(DefiniteLength::Absolute(scrollbar_width.into()));
+                style.size.height = Length::Definite(DefiniteLength::Fraction(1.));
             }
             ScrollbarOrientation::Horizontal => {
+                style.size.width = Length::Definite(DefiniteLength::Fraction(1.));
                 style.size.height =
                     Length::Definite(DefiniteLength::Absolute(scrollbar_width.into()));
             }
@@ -279,7 +288,7 @@ impl Element for Scrollbar {
             let state = state
                 .flatten()
                 .unwrap_or_else(|| Rc::new(RefCell::new(ScrollbarState::default())));
-            
+
             let is_hovered = prepaint.hitbox.is_hovered(window);
 
             let theme = cx.theme();
@@ -295,7 +304,7 @@ impl Element for Scrollbar {
                 .lerp(&0.6, request_layout.animation_timer)
                 .clamp(0.6, 1.);
             thumb_color.a = thumb_opacity;
-            
+
             if is_hovered {
                 state.borrow_mut().last_interaction = Instant::now();
             }
