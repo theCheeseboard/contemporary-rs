@@ -1,6 +1,6 @@
 [package]
 name = "cntp_i18n"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 readme = "README.md"
 license = "MIT"
@@ -15,9 +15,9 @@ pseudotranslation = ["cntp_localesupport/pseudotranslation"]
 default = ["pseudotranslation", "chrono"]
 
 [dependencies]
-cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.1.0" }
-cntp_i18n_macros = { path = "../cntp_i18n_macros", version = "0.1.0" }
-cntp_localesupport = { path = "../../localesupport/cntp_localesupport", version = "0.1.0" }
+cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.2.0" }
+cntp_i18n_macros = { path = "../cntp_i18n_macros", version = "0.2.0" }
+cntp_localesupport = { path = "../../localesupport/cntp_localesupport", version = "0.2.0" }
 once_cell = { workspace = true }
 phf = { version = "0.12", features = ["macros"] }
 rustc-hash = { workspace = true }

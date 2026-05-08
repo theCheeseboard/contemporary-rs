@@ -1,6 +1,6 @@
 [package]
 name = "contemporary"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "GPL-3"
 keywords = ["cntp", "gpui"]
@@ -12,9 +12,9 @@ parlance = ["cntp_i18n_parlance_source", "tokio"]
 default = []
 
 [dependencies]
-cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui"], version = "0.1.0" }
-cntp_macros = { path = "../cntp_macros", version = "0.1.0" }
-cntp_config = { path = "../cntp_config", version = "0.1.0" }
+cntp_i18n = { path = "../i18n/cntp_i18n", features = ["gpui"], version = "0.2.0" }
+cntp_macros = { path = "../cntp_macros", version = "0.2.0" }
+cntp_config = { path = "../cntp_config", version = "0.2.0" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 schemars = "1.0"
@@ -54,4 +54,4 @@ block2 = "0.6"
 windows = "0.61"
 
 [build-dependencies]
-cntp_i18n_gen = { path = "../i18n/cntp_i18n_gen", version = "0.1.0" }
+cntp_i18n_gen = { path = "../i18n/cntp_i18n_gen", version = "0.2.0" }

@@ -1,6 +1,6 @@
 [package]
 name = "cargo-cntp-bundle"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 keywords = ["cntp", "deployment"]
@@ -10,7 +10,7 @@ description = "Cleanly bundles an application to be run on a target platform"
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 clap-cargo = { workspace = true }
-cntp_bundle_lib = { path = "../cntp_bundle_lib", version = "0.1.0" }
+cntp_bundle_lib = { path = "../cntp_bundle_lib", version = "0.2.0" }
 tracing = { workspace = true }
 tracing-subscriber = "0.3"
 clap-verbosity-flag = { version = "3.0.3", default-features = false, features = [

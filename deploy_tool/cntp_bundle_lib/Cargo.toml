@@ -1,6 +1,6 @@
 [package]
 name = "cntp_bundle_lib"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 keywords = ["cntp", "deployment"]
@@ -9,8 +9,8 @@ description = "Support library for packaging applications"
 
 [dependencies]
 tracing = { workspace = true }
-cntp_config = { path = "../../cntp_config", version = "0.1.0" }
-cntp_icon_tool_core = { path = "../../icon_tool/cntp_icon_tool_core", version = "0.1.0" }
+cntp_config = { path = "../../cntp_config", version = "0.2.0" }
+cntp_icon_tool_core = { path = "../../icon_tool/cntp_icon_tool_core", version = "0.2.0" }
 plist = "1"
 resvg = "0.45"
 tempfile = "3.8"

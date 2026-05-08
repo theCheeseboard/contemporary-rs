@@ -798,7 +798,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-cntp-bundle"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "clap",
  "clap-cargo",
@@ -812,7 +812,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-cntp-deploy"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "clap",
  "clap-cargo",
@@ -825,7 +825,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-cntp-i18n"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "cargo_metadata 0.20.0",
@@ -1079,7 +1079,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "cntp_bundle_lib"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "cargo_metadata 0.20.0",
@@ -1098,7 +1098,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_config"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1108,7 +1108,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_i18n_core",
  "cntp_i18n_macros",
@@ -1121,7 +1121,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_build_core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1130,7 +1130,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "cntp_localesupport",
@@ -1140,7 +1140,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_gen"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_i18n_build_core",
  "cntp_i18n_core",
@@ -1156,7 +1156,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_macros"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_i18n_build_core",
  "cntp_i18n_core",
@@ -1170,7 +1170,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_parlance_source"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_i18n",
  "serde",
@@ -1183,21 +1183,21 @@ dependencies = [
 
 [[package]]
 name = "cntp_i18n_parse"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "syn 2.0.117",
 ]
 
 [[package]]
 name = "cntp_icon_tool_core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "regex",
 ]
 
 [[package]]
 name = "cntp_icon_tool_macros"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_config",
  "cntp_icon_tool_core",
@@ -1207,7 +1207,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_localesupport"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "icu",
@@ -1220,7 +1220,7 @@ dependencies = [
 
 [[package]]
 name = "cntp_macros"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cntp_config",
  "quote",
@@ -1402,7 +1402,7 @@ dependencies = [
 
 [[package]]
 name = "contemporary"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "ashpd 0.11.1",
@@ -5390,7 +5390,7 @@ checksum = "b4596b6d070b27117e987119b4dac604f3c58cfb0b191112e24771b2faeac1a6"
 
 [[package]]
 name = "playground"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "cntp_i18n",

@@ -1,6 +1,6 @@
 [package]
 name = "cntp_i18n_gen"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
@@ -9,10 +9,10 @@ description = "Support library for generating cntp_i18n translation files"
 
 [dependencies]
 syn = { workspace = true, features = ["visit", "parsing", "full"] }
-cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.1.0" }
-cntp_i18n_build_core = { path = "../cntp_i18n_build_core", version = "0.1.0" }
+cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.2.0" }
+cntp_i18n_build_core = { path = "../cntp_i18n_build_core", version = "0.2.0" }
 tracing = { workspace = true }
-cntp_i18n_parse = { path = "../cntp_i18n_parse", version = "0.1.0" }
+cntp_i18n_parse = { path = "../cntp_i18n_parse", version = "0.2.0" }
 walkdir = "2"
 serde_json = { workspace = true, features = ["preserve_order"] }
 icu = { workspace = true }

@@ -1,6 +1,6 @@
 [package]
 name = "cntp_i18n_macros"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
@@ -16,8 +16,8 @@ proc-macro = true
 syn = { workspace = true, features = ["extra-traits"] }
 quote = "1"
 once_cell = { workspace = true }
-cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.1.0" }
-cntp_i18n_parse = { path = "../cntp_i18n_parse", version = "0.1.0" }
-cntp_i18n_build_core = { path = "../cntp_i18n_build_core", version = "0.1.0" }
+cntp_i18n_core = { path = "../cntp_i18n_core", version = "0.2.0" }
+cntp_i18n_parse = { path = "../cntp_i18n_parse", version = "0.2.0" }
+cntp_i18n_build_core = { path = "../cntp_i18n_build_core", version = "0.2.0" }
 proc-macro2 = "1"
 rustc-hash = { workspace = true }

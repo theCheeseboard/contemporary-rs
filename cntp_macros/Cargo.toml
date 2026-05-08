@@ -1,6 +1,6 @@
 [package]
 name = "cntp_macros"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "GPL-3"
 keywords = ["cntp", "gpui"]
@@ -10,7 +10,7 @@ categories = ["development-tools", "gui"]
 proc-macro = true
 
 [dependencies]
-cntp_config = { path = "../cntp_config", version = "0.1.0" }
+cntp_config = { path = "../cntp_config", version = "0.2.0" }
 syn = { workspace = true }
 quote = "1"
 serde = { workspace = true }
