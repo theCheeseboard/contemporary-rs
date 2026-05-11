@@ -1,5 +1,8 @@
 pub mod config;
 
+#[cfg(feature = "blueprint_detection")]
+mod blueprint_auto_detection;
+
 use crate::config::{
     ContemporaryConfigApplicationDef, ContemporaryConfigConfigDef, ContemporaryConfigDeployment,
     ContemporaryConfigDeploymentDef,
@@ -20,6 +23,9 @@ pub struct ContemporaryConfig {
 
     #[serde(skip)]
     translations: HashMap<String, HashMap<String, String>>,
+
+    #[serde(skip)]
+    path: PathBuf,
 }
 
 impl ContemporaryConfig {
@@ -38,6 +44,7 @@ impl ContemporaryConfig {
             };
 
             config.load_translations(path.parent().unwrap().into());
+            config.path = path;
 
             Some(config)
         } else {
@@ -238,7 +245,15 @@ impl ContemporaryConfig {
             .unwrap_or("auto".into());
 
         match blueprint_configuration.as_str() {
-            "auto" => true,
+            "auto" => cfg_select! {
+                feature = "blueprint_detection" => {
+                    blueprint_auto_detection::autodetect_blueprint(&self.path).unwrap_or(false)
+                },
+                _ => panic!(
+                    "Blueprint auto configuration selected but cntp_config not built \
+                    with blueprint_detection feature"
+                )
+            },
             "false" => false,
             "true" => true,
             _ => panic!("Unknown blueprint configuration: {blueprint_configuration}"),

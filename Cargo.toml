@@ -51,3 +51,4 @@ zed-reqwest = { version = "0.12.15-zed", default-features = false, features = [
 tokio = { version = "1.51", features = ["rt-multi-thread"] }
 url = "2"
 image = "0.25"
+git2 = "0.20"
