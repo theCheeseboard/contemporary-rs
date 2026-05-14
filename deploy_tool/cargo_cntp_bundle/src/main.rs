@@ -11,7 +11,7 @@ use std::process::exit;
 use tracing::{error, info};
 
 #[cfg(target_os = "linux")]
-use cntp_bundle_lib::linux::bundle_linux;
+use cntp_bundle_lib::linux::bundle::bundle_linux;
 
 #[cfg(target_os = "macos")]
 use cntp_bundle_lib::macos::bundle::bundle_macos;

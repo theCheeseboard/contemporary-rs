@@ -20,6 +20,8 @@ isahc = { version = "1", features = ["static-ssl"] }
 anyhow = "1"
 regex = "1"
 tiff = "0.10.0"
+elf = { workspace = true }
+ld-so-cache = { workspace = true }
 
 [target.'cfg(target_os="windows")'.dependencies]
 winres-edit = "=0.2.0"

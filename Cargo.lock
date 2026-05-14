@@ -1086,7 +1086,9 @@ dependencies = [
  "cntp_config",
  "cntp_icon_tool_core",
  "current_platform",
+ "elf",
  "isahc",
+ "ld-so-cache",
  "plist",
  "regex",
  "resvg",
@@ -2001,6 +2003,12 @@ name = "either"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
+
+[[package]]
+name = "elf"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55dd888a213fc57e957abf2aa305ee3e8a28dbe05687a251f33b637cd46b0070"
 
 [[package]]
 name = "embed-resource"
@@ -4077,6 +4085,18 @@ name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
+
+[[package]]
+name = "ld-so-cache"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ea4692a86d8e0cb2521e3a58cb99591fcd9aa0d432dcc21fbbc84aeae8d76a4"
+dependencies = [
+ "clap",
+ "nom 8.0.0",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "leak"

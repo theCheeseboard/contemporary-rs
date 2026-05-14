@@ -36,11 +36,17 @@ pub fn deploy_rootdir(setup_data: &ToolSetup, output_file: &str) {
             exit(1);
         }
     }
-    
+
     let appdir_usr = appdir_root.join("usr");
 
     // Recursively walk the appdir_root and copy each file to the output directory, preserving the directory structure and permissions
-    if let Err(e) = copy_dir_all(&appdir_usr, &output_file, |_| true) {
+    if let Err(e) = copy_dir_all(&appdir_usr, &output_file, |entry| {
+        !entry
+            .path()
+            .strip_prefix(&appdir_root)
+            .unwrap()
+            .starts_with("usr/lib")
+    }) {
         error!("Failed to copy deployment files: {}", e);
         exit(1);
     }
