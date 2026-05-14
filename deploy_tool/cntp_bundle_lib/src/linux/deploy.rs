@@ -11,11 +11,14 @@ pub fn deploy_linux(setup_data: &ToolSetup, platform_subtype: &Option<String>, o
             deploy_appimage(setup_data, output_file);
         }
         "rootdir" => {
-            deploy_rootdir(setup_data, output_file);
+            deploy_rootdir(setup_data, output_file, true);
+        }
+        "rootdir-libs" => {
+            deploy_rootdir(setup_data, output_file, false);
         }
         _ => {
             error!("Unsupported platform subtype: {}", subtype);
-            error!("Supported platform subtypes: appimage, rootdir");
+            error!("Supported platform subtypes: appimage, rootdir, rootdir-libs");
             exit(1);
         }
     }

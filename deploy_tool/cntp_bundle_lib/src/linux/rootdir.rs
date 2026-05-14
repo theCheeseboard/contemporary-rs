@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::process::exit;
 use tracing::{error, info};
 
-pub fn deploy_rootdir(setup_data: &ToolSetup, output_file: &str) {
+pub fn deploy_rootdir(setup_data: &ToolSetup, output_file: &str, strip_libs: bool) {
     let appdir_root = setup_data.output_directory.join("appdir");
     if !appdir_root.exists() {
         error!("AppDir does not exist. Please bundle first.");
@@ -41,11 +41,15 @@ pub fn deploy_rootdir(setup_data: &ToolSetup, output_file: &str) {
 
     // Recursively walk the appdir_root and copy each file to the output directory, preserving the directory structure and permissions
     if let Err(e) = copy_dir_all(&appdir_usr, &output_file, |entry| {
-        !entry
-            .path()
-            .strip_prefix(&appdir_root)
-            .unwrap()
-            .starts_with("usr/lib")
+        if strip_libs {
+            !entry
+                .path()
+                .strip_prefix(&appdir_root)
+                .unwrap()
+                .starts_with("usr/lib")
+        } else {
+            true
+        }
     }) {
         error!("Failed to copy deployment files: {}", e);
         exit(1);
