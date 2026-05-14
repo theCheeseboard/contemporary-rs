@@ -45,11 +45,22 @@ pub fn copy_shared_libraries(elf: &Path, target_directory: &Path) -> anyhow::Res
         );
     }
 
+    let mut have_error = false;
     for required_dependant in required_dependants {
-        fs::copy(
+        if let Err(e) = fs::copy(
             &required_dependant,
             target_directory.join(required_dependant.file_name().unwrap()),
-        )?;
+        ) {
+            have_error = true;
+            warn!("Failed to copy shared library {required_dependant:?}: {e}");
+        }
+    }
+    
+    if have_error {
+        warn!(
+            "Some libraries could not be copied. \
+            The bundle may be incomplete."
+        );
     }
 
     Ok(())
