@@ -26,6 +26,7 @@ pub struct ContemporaryConfigDeploymentDef {
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,
+    pub appstream_metainfo_file: Option<String>,
 
     // macOS only
     pub apple_localisation_dir: Option<String>,
@@ -50,6 +51,7 @@ pub struct ContemporaryConfigDeployment {
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,
+    pub appstream_metainfo_file: Option<String>,
 
     // macOS only
     pub apple_localisation_dir: Option<LocalisedString>,

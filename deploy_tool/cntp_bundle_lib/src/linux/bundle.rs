@@ -1,22 +1,24 @@
+pub mod appstream_metainfo;
 pub mod desktop_entry;
 pub mod shared_libraries;
 
-use std::collections::HashMap;
-use std::fmt::Error;
-use std::fs::{copy, create_dir_all, remove_dir_all, set_permissions, write, Permissions};
-use std::os::unix::fs::{symlink, PermissionsExt};
-use std::path::{Path, PathBuf};
-use std::process::exit;
-use resvg::render;
-use resvg::tiny_skia::{Pixmap, Transform};
-use resvg::usvg::{Options, Tree};
-use tracing::error;
-use cntp_config::{ContemporaryConfig, LocalisedString};
 use crate::icon::get_svg_icon_contents;
 use crate::linux::APPRUN_TEMPLATE;
+use crate::linux::bundle::appstream_metainfo::copy_appstream_metainfo;
 use crate::linux::bundle::desktop_entry::generate_desktop_entry;
 use crate::linux::bundle::shared_libraries::copy_shared_libraries;
 use crate::tool_setup::ToolSetup;
+use cntp_config::{ContemporaryConfig, LocalisedString};
+use resvg::render;
+use resvg::tiny_skia::{Pixmap, Transform};
+use resvg::usvg::{Options, Tree};
+use std::collections::HashMap;
+use std::fmt::Error;
+use std::fs::{Permissions, copy, create_dir_all, remove_dir_all, set_permissions, write};
+use std::os::unix::fs::{PermissionsExt, symlink};
+use std::path::{Path, PathBuf};
+use std::process::exit;
+use tracing::error;
 
 pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, PathBuf>) {
     let target_triple = setup_data.targets.first().unwrap();
@@ -31,6 +33,7 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
 
     let desktop_entry_with_desktop_extension = desktop_entry.clone() + ".desktop";
     let desktop_entry_with_svg_extension = desktop_entry.clone() + ".svg";
+    let desktop_entry_with_metainfo_extension = desktop_entry.clone() + ".metainfo.xml";
 
     let Ok(_) = create_dir_all(&setup_data.output_directory) else {
         error!("Failed to create output directory");
@@ -59,13 +62,13 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
         error!("Failed to copy executable to bin directory");
         exit(1);
     };
-    
+
     let appdir_lib = appdir_usr.join("lib");
     let Ok(_) = create_dir_all(&appdir_lib) else {
         error!("Failed to create appdir lib folder");
         exit(1);
     };
-    
+
     if let Err(e) = copy_shared_libraries(executable_path, &appdir_lib) {
         error!("Failed to copy shared libraries: {}", e);
         exit(1);
@@ -164,4 +167,22 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
         error!("Failed to create icon symlink");
         exit(1);
     };
+
+    if let Some(appstream_metainfo_file) = deployment.appstream_metainfo_file {
+        let appdir_share_metainfo = appdir_share.join("metainfo");
+        let Ok(_) = create_dir_all(&appdir_share_metainfo) else {
+            error!("Failed to create appdir metainfo folder");
+            exit(1);
+        };
+        let metainfo_path = appdir_share_metainfo.join(&desktop_entry_with_metainfo_extension);
+
+        let input_path = setup_data.base_path.join(appstream_metainfo_file);
+
+        if let Err(e) =
+            copy_appstream_metainfo(&input_path, &metainfo_path, &setup_data.contemporary_config)
+        {
+            error!("Failed to write appstream metainfo: {}", e);
+            exit(1);
+        }
+    }
 }

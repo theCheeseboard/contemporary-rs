@@ -180,6 +180,9 @@ impl ContemporaryConfig {
             desktop_entry_categories: specific_deployment
                 .desktop_entry_categories
                 .or(deployment.desktop_entry_categories),
+            appstream_metainfo_file: specific_deployment
+                .appstream_metainfo_file
+                .or(deployment.appstream_metainfo_file),
 
             // macOS only
             apple_localisation_dir: self.resolve_localised_string(
@@ -231,6 +234,11 @@ impl ContemporaryConfig {
         } else {
             Some(LocalisedString::Hardcoded(string))
         }
+    }
+    
+    pub fn lookup_translation(&self, lang: &str, key: &str) -> Option<&String> {
+        let translations = self.translations.get(lang)?;
+        translations.get(key)
     }
 
     pub fn available_localisations(&self) -> Vec<String> {

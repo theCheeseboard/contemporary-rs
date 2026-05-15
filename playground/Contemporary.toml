@@ -10,6 +10,7 @@ application_generic_name = "t:APPLICATION_GENERIC_NAME"
 application_machine_name = "contemporary-playground"
 organization_name = "theCheeseboard"
 desktop_entry = "com.vicr123.contemporary.playground"
+appstream_metainfo_file = "dist/com.vicr123.contemporary.playground.metainfo.xml"
 contemporary_base_icon = "dist/baseicon.svg"
 disk_image_background = "dist/app-dmg-background.svg"
 extra_info_plist_attributes = { NSRemovableVolumesUsageDescription = "t:REMOVABLE_VOLUMES_USAGE_DESCRIPTION" }

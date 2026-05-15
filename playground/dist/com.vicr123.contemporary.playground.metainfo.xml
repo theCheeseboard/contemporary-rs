@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application" xmlns:cntp="https://vicr123.com/cntp-rs">
+    <id>com.vicr123.contemporary.playground</id>
+    <name cntp:trkey="APPLICATION_NAME">Contemporary Playground</name>
+    <summary cntp:trkey="APPLICATION_GENERIC_NAME">Control Playground</summary>
+</component>
