@@ -10,7 +10,7 @@ use xml::name::Name;
 use xml::reader::XmlEvent;
 use xml::{EmitterConfig, EventReader, writer};
 
-const CNTP_RS_NAMESPACE: &str = "https://vicr123.com/cntp-rs";
+const CNTP_RS_NAMESPACE: &str = "https://vicr123.com/contemporary/metainfo";
 
 pub fn copy_appstream_metainfo(
     source: &Path,
@@ -70,12 +70,8 @@ pub fn copy_appstream_metainfo(
                     off_depth = off_depth.strict_add(1);
                 } else if let Some(tr_key) = tr_key {
                     // Save the event
-                    start_event = Some((
-                        name.clone(),
-                        attributes.clone(),
-                        namespace.clone(),
-                        tr_key,
-                    ));
+                    start_event =
+                        Some((name.clone(), attributes.clone(), namespace.clone(), tr_key));
 
                     // Stop writing until the corresponding EndElement
                     off_depth = 1;

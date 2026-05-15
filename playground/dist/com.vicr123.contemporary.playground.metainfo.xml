@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop-application" xmlns:cntp="https://vicr123.com/cntp-rs">
+<component type="desktop-application" xmlns:cntp="https://vicr123.com/contemporary/metainfo">
     <id>com.vicr123.contemporary.playground</id>
+
     <name cntp:trkey="APPLICATION_NAME">Contemporary Playground</name>
     <summary cntp:trkey="APPLICATION_GENERIC_NAME">Control Playground</summary>
+
+    <metadata_license>MIT</metadata_license>
+    <project_license>GPL-3.0-or-later</project_license>
+    <developer_name>Victor Tran</developer_name>
+
+    <recommends>
+        <control>pointing</control>
+        <control>keyboard</control>
+        <control>touch</control>
+    </recommends>
+
+    <description>
+        <p cntp:trkey="METAINFO_DESCRIPTION">Play with the Contemporary design system and controls</p>
+    </description>
+
+    <launchable type="desktop-id">com.vicr123.contemporary.playground.desktop</launchable>
+    <content_rating type="oars-1.1"/>
+    <provides>
+        <binary>playground</binary>
+    </provides>
 </component>

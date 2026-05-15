@@ -1,5 +1,6 @@
 {
   "APPLICATION_NAME": "Contemporary Playground",
   "APPLICATION_GENERIC_NAME": "Control Playground",
-  "REMOVABLE_VOLUMES_USAGE_DESCRIPTION": "This is example text for an example attribute to go inside Info.plist"
+  "REMOVABLE_VOLUMES_USAGE_DESCRIPTION": "This is example text for an example attribute to go inside Info.plist",
+  "METAINFO_DESCRIPTION": "Play with the Contemporary design system and controls"
 }
