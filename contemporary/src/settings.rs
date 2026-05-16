@@ -10,11 +10,11 @@ use std::path::PathBuf;
 use tracing::error;
 
 pub trait SettingsManager {
-    fn read_settings<TData>(&self) -> Result<SettingsRwLock<TData>, SettingsError>
+    fn read_settings<TData>(&self) -> Result<TData, SettingsError>
     where
         TData: Setting;
 
-    fn write_settings<TData>(&self) -> Result<TData, SettingsError>
+    fn write_settings<TData>(&self) -> Result<SettingsRwLock<TData>, SettingsError>
     where
         TData: Setting;
 
@@ -24,20 +24,20 @@ pub trait SettingsManager {
 }
 
 impl SettingsManager for App {
-    fn read_settings<TData>(&self) -> Result<SettingsRwLock<TData>, SettingsError>
+    fn read_settings<TData>(&self) -> Result<TData, SettingsError>
     where
         TData: Setting,
     {
-        let file_path = file_path_for_data(self);
+        let file_path = file_path_for_data::<TData>(self);
         let file = File::open(&file_path)?;
         Ok(serde_json::from_reader(file)?)
     }
 
-    fn write_settings<TData>(&self) -> Result<TData, SettingsError>
+    fn write_settings<TData>(&self) -> Result<SettingsRwLock<TData>, SettingsError>
     where
         TData: Setting,
     {
-        let file_path = file_path_for_data(self);
+        let file_path = file_path_for_data::<TData>(self);
         let data = self.read_settings()?;
 
         Ok(SettingsRwLock {
@@ -50,7 +50,7 @@ impl SettingsManager for App {
     where
         TData: Setting,
     {
-        let file_path = file_path_for_data(self);
+        let file_path = file_path_for_data::<TData>(self);
         std::fs::remove_file(&file_path)?;
         Ok(())
     }
