@@ -106,7 +106,7 @@ pub fn copy_appstream_metainfo(
                             };
 
                             let lang_attribute =
-                                Attribute::new(Name::prefixed("xml", "lang"), lang);
+                                Attribute::new(Name::prefixed("lang", "xml"), lang);
 
                             xml_writer.write(writer::XmlEvent::StartElement {
                                 name: name.borrow(),
