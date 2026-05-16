@@ -4,6 +4,7 @@ use crate::components::text_field::bind_text_field_keys;
 use crate::jobs::job_manager::JobManager;
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
+use crate::settings::SettingsManager;
 use crate::styling::theme::Theme;
 use crate::tokio::tokio_helper::TokioHelper;
 use crate::tracing::application_log::ApplicationLog;
