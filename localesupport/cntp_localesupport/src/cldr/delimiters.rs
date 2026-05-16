@@ -41,7 +41,7 @@ struct DelimitersFileEntry {
     delimiters: Delimiters,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Delimiters {
     pub quotation_start: String,

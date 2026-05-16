@@ -8,7 +8,7 @@ use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
 use crate::setup::{About, OpenLink};
 use crate::styling::theme::{ThemeStorage, VariableColor};
-use cntp_i18n::{i18n_manager, tr};
+use cntp_i18n::{I18N_MANAGER, tr};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, ClickEvent, Context, Div, Entity, FocusHandle, ImageSource,
@@ -60,7 +60,7 @@ impl Render for ApplicationMenu {
         let theme = cx.theme();
         let details = cx.global::<Details>();
 
-        let locale = &i18n_manager!().locale;
+        let locale = I18N_MANAGER.locale();
 
         div().child(
             scrim("application-menu")
@@ -150,7 +150,7 @@ impl Render for ApplicationMenu {
                                             .on_click(cx.listener(|this, _, _, cx| {
                                                 let details = cx.global::<Details>();
 
-                                                let locale = &i18n_manager!().locale;
+                                                let locale = I18N_MANAGER.locale();
 
                                                 let mut menu_items: Vec<MenuItem> = details
                                                     .links

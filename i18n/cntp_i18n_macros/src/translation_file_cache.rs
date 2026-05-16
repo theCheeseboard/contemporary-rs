@@ -1,6 +1,5 @@
 use cntp_i18n_build_core::load::{self, TranslationEntry};
 use rustc_hash::{FxHashMap, FxHashSet};
-use std::borrow::Cow;
 use std::env::args;
 use std::sync::Arc;
 use std::{env, iter, path::Path, sync::LazyLock};

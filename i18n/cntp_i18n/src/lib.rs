@@ -131,7 +131,8 @@ use quick_cache::sync::Cache;
 use rustc_hash::FxHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
-use std::sync::RwLock;
+use std::ops::Deref;
+use std::sync::{Arc, RwLock};
 
 use crate::hardcoded_i18n_source::HardcodedI18nSource;
 pub use cntp_i18n_core::{
@@ -168,38 +169,11 @@ mod pseudotranslation;
 ///     I18N_MANAGER.write().unwrap().locale = Locale::new_from_locale_identifier("fr");
 /// }
 /// ```
-///
-/// For read-only access (most common), use the [`i18n_manager!`] macro:
-///
-/// ```rust,ignore
-/// let manager = i18n_manager!();
-/// let current_locale = &manager.locale;
-/// ```
-pub static I18N_MANAGER: Lazy<RwLock<I18nManager>> =
-    Lazy::new(|| RwLock::new(I18nManager::default()));
+pub static I18N_MANAGER: Lazy<SharedI18nManager> =
+    Lazy::new(|| SharedI18nManager(RwLock::new(I18nManager::default())));
 
-/// Convenience macro to get a read lock on the global [`I18N_MANAGER`].
-///
-/// This is equivalent to `I18N_MANAGER.read().unwrap()` but more concise.
-///
-/// # Example
-///
-/// ```rust,ignore
-/// use cntp_i18n::i18n_manager;
-///
-/// let manager = i18n_manager!();
-/// println!("Current locale: {:?}", manager.locale.messages);
-/// ```
-///
-/// # Panics
-///
-/// Panics if the `RwLock` is poisoned (another thread panicked while holding the lock).
-#[macro_export]
-macro_rules! i18n_manager {
-    () => {
-        cntp_i18n::I18N_MANAGER.read().unwrap()
-    };
-}
+static KEY_HASHES: Lazy<RwLock<HashMap<String, Vec<u64>>>> =
+    Lazy::new(|| RwLock::new(HashMap::new()));
 
 /// Manages the state of the i18n system in the application.
 ///
@@ -222,9 +196,8 @@ pub struct I18nManager {
     /// locale-specific formatting (numbers, dates, etc.).
     pub locale: Locale,
     cache: Cache<u64, I18nString>,
-    key_hashes: RwLock<HashMap<String, Vec<u64>>>,
 
-    cache_eviction_callbacks: Vec<Box<dyn Fn() + Send + Sync>>,
+    cache_eviction_callbacks: Vec<Arc<dyn Fn() + Send + Sync>>,
 }
 
 /// Internal trait for type-erased string modifier transformations.
@@ -324,68 +297,6 @@ impl Variable<'_> {
 type LookupVariable<'a> = &'a (&'a str, Variable<'a>);
 
 impl I18nManager {
-    /// Load a translation source into the manager.
-    ///
-    /// Translation sources are searched in reverse order of when they are loaded. This allows
-    /// you to override translations by loading a more specific source after a
-    /// general one.
-    ///
-    /// Loading a new translation source will clear the translation cache.
-    ///
-    /// # Example
-    ///
-    /// ```rust,ignore
-    /// use cntp_i18n::{I18N_MANAGER, tr_load};
-    ///
-    /// // Load the main application translations
-    /// I18N_MANAGER.write().unwrap().load_source(tr_load!());
-    ///
-    /// // Optionally load additional/override translations
-    /// // I18N_MANAGER.write().unwrap().load_source(custom_source);
-    /// ```
-    ///
-    /// # Typical Usage
-    ///
-    /// Most applications will call this once at startup with `tr_load!()`:
-    ///
-    /// ```rust,ignore
-    /// fn main() {
-    ///     I18N_MANAGER.write().unwrap().load_source(tr_load!());
-    ///     // ... rest of application
-    /// }
-    /// ```
-    pub fn load_source(&mut self, source: impl I18nSource + 'static) {
-        self.sources.push(Box::new(source));
-
-        // Clear the cache because new translations might be available
-        self.clear_cache();
-    }
-
-    /// Clear the translation cache.
-    ///
-    /// This can be used in the event that a dynamic translation provider is used, and the cache
-    /// becomes stale.
-    pub fn clear_cache(&mut self) {
-        self.cache.clear();
-        self.key_hashes.write().unwrap().clear();
-    }
-
-    /// Evicts all translations for a specified key from the cache
-    ///
-    /// This is intended to be used by translation providers to notify the
-    /// translation system when translations for a key have changed or become invalid.
-    pub fn evict_key(&self, key: &str) {
-        if let Some(hashes) = self.key_hashes.read().unwrap().get(key) {
-            for hash in hashes {
-                self.cache.remove(hash);
-            }
-        }
-
-        for callback in self.cache_eviction_callbacks.iter() {
-            callback();
-        }
-    }
-
     /// Subscribes a callback to be invoked during cache eviction events.
     ///
     /// This method allows users to register a callback function that will be executed
@@ -396,7 +307,7 @@ impl I18nManager {
     /// - `callback`: A closure or function that implements `Fn() + Send + Sync + 'static`.
     ///   This callback will be called when a cache eviction event is triggered.
     pub fn subscribe_to_cache_eviction(&mut self, callback: impl Fn() + Send + Sync + 'static) {
-        self.cache_eviction_callbacks.push(Box::new(callback));
+        self.cache_eviction_callbacks.push(Arc::new(callback));
     }
 
     /// Look up a translation with caching.
@@ -432,7 +343,7 @@ impl I18nManager {
         self.cache.get(&full_call_hash).clone().unwrap_or_else(|| {
             let result = self.lookup(key, variables, lookup_crate, locale_override);
             self.cache.insert(full_call_hash, result.clone());
-            self.key_hashes
+            KEY_HASHES
                 .write()
                 .unwrap()
                 .entry(key.to_string())
@@ -668,8 +579,92 @@ impl Default for I18nManager {
             sources: vec![Box::new(HardcodedI18nSource)],
             locale: Locale::current(),
             cache: Cache::new(500),
-            key_hashes: RwLock::new(HashMap::new()),
             cache_eviction_callbacks: vec![],
         }
+    }
+}
+
+/// The shared I18nManager, used in [I18N_MANAGER].
+pub struct SharedI18nManager(RwLock<I18nManager>);
+
+impl SharedI18nManager {
+    /// Clear the translation cache.
+    ///
+    /// This can be used in the event that a dynamic translation provider is used, and the cache
+    /// becomes stale.
+    pub fn clear_cache(&self) {
+        self.0.write().unwrap().cache.clear();
+        KEY_HASHES.write().unwrap().clear();
+    }
+
+    /// Load a translation source into the manager.
+    ///
+    /// Translation sources are searched in reverse order of when they are loaded. This allows
+    /// you to override translations by loading a more specific source after a
+    /// general one.
+    ///
+    /// Loading a new translation source will clear the translation cache.
+    ///
+    /// # Example
+    ///
+    /// ```rust,ignore
+    /// use cntp_i18n::{I18N_MANAGER, tr_load};
+    ///
+    /// // Load the main application translations
+    /// I18N_MANAGER.load_source(tr_load!());
+    ///
+    /// // Optionally load additional/override translations
+    /// // I18N_MANAGER.load_source(custom_source);
+    /// ```
+    ///
+    /// # Typical Usage
+    ///
+    /// Most applications will call this once at startup with `tr_load!()`:
+    ///
+    /// ```rust,ignore
+    /// fn main() {
+    ///     I18N_MANAGER.load_source(tr_load!());
+    ///     // ... rest of application
+    /// }
+    /// ```
+    pub fn load_source(&self, source: impl I18nSource + 'static) {
+        {
+            let mut write = self.write().unwrap();
+            write.sources.push(Box::new(source));
+
+            // Clear the cache because new translations might be available
+            write.cache.clear();
+        }
+
+        KEY_HASHES.write().unwrap().clear();
+    }
+
+    /// Evicts all translations for a specified key from the cache
+    ///
+    /// This is intended to be used by translation providers to notify the
+    /// translation system when translations for a key have changed or become invalid.
+    pub fn evict_key(&self, key: &str) {
+        if let Some(hashes) = KEY_HASHES.read().unwrap().get(key) {
+            for hash in hashes {
+                self.write().unwrap().cache.remove(hash);
+            }
+        }
+
+        for callback in self.read().unwrap().cache_eviction_callbacks.clone() {
+            callback();
+        }
+    }
+
+    /// Retrieves the current locale
+    pub fn locale(&self) -> Locale {
+        self.read().unwrap().locale.clone()
+    }
+}
+
+impl Deref for SharedI18nManager {
+    type Target = RwLock<I18nManager>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }

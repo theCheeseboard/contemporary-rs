@@ -177,6 +177,7 @@ pub enum ListWidth {
 /// let english = Locale::new_from_locale_identifier("en");
 /// println!("{}", french.human_readable_locale_name_in(&english));
 /// ```
+#[derive(Clone)]
 pub struct Locale {
     /// The message locale fallback chain (e.g., `["en-US", "en"]`).
     pub messages: Vec<String>,

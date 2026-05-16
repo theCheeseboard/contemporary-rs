@@ -1,5 +1,5 @@
 use chrono::{DateTime, Local};
-use cntp_i18n::{LayoutDirection, ListFunction, Locale, LocaleFormattable, i18n_manager, tr, trf};
+use cntp_i18n::{LayoutDirection, ListFunction, Locale, LocaleFormattable, tr, trf, I18N_MANAGER};
 use contemporary::components::constrainer::constrainer;
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
@@ -20,7 +20,7 @@ impl I18n {
         cx.new(|cx| I18n {
             i18n_language: cx.new(|cx| {
                 let mut text_field = TextField::new("i18n-preferred-language", cx);
-                text_field.set_text(i18n_manager!().locale.messages.first().unwrap().as_str());
+                text_field.set_text(I18N_MANAGER.locale().messages.first().unwrap().as_str());
                 text_field.set_placeholder(
                     tr!("I18N_LANGUAGE_CODE", "Enter a language code")
                         .to_string()

@@ -15,7 +15,7 @@ pub enum I18nFullStringPart {
 }
 
 impl I18nFullStringPart {
-    pub fn calculate_string_part(&self, this_key: &str) -> I18nStringPart {
+    pub fn calculate_string_part(&self, _this_key: &str) -> I18nStringPart {
         match self {
             I18nFullStringPart::Static(i18n_string) => I18nStringPart::Static(i18n_string.clone()),
             I18nFullStringPart::Variable(i18n_string) => {

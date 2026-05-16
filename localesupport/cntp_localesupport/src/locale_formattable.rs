@@ -143,7 +143,7 @@ impl LocaleFormattable for String {
 }
 
 impl LocaleFormattable for ListBuilder<'_, '_> {
-    fn to_locale_string(&self, locale: &Locale) -> String {
+    fn to_locale_string(&self, _: &Locale) -> String {
         self.build()
     }
 }

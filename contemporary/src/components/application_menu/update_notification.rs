@@ -3,7 +3,7 @@ use crate::components::admonition::{AdmonitionSeverity, admonition};
 use crate::components::button::button;
 use crate::components::icon_text::icon_text;
 use crate::self_update::{SelfUpdate, VisibleSelfUpdateState};
-use cntp_i18n::{i18n_manager, tr};
+use cntp_i18n::{tr, I18N_MANAGER};
 use gpui::{
     App, BorrowAppContext, IntoElement, ParentElement, RenderOnce, Styled, Window, div, px,
 };
@@ -17,8 +17,8 @@ impl RenderOnce for UpdateNotification {
         let details = cx.global::<Details>();
         let new_update = self_update.state();
 
-        let application_name = i18n_manager!()
-            .locale
+        let application_name = I18N_MANAGER
+            .locale()
             .messages
             .iter()
             .filter_map(|locale| {

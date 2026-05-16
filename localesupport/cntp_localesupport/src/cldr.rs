@@ -4,6 +4,7 @@ pub(crate) use crate::cldr::list_patterns::ListPatterns;
 mod delimiters;
 mod list_patterns;
 
+#[derive(Clone)]
 pub struct CldrData {
     pub delimiters: Delimiters,
     pub list_patterns: ListPatterns,

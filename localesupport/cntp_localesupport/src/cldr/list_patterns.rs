@@ -1,5 +1,4 @@
 use crate::Locale;
-use crate::cldr::delimiters::Delimiters;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -29,13 +28,13 @@ struct ListPatternsFile {
     main: HashMap<String, ListPatternsFileEntry>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 struct ListPatternsFileEntry {
     list_patterns: ListPatterns,
 }
 
-#[derive(Deserialize, Default, Debug)]
+#[derive(Deserialize, Clone, Default, Debug)]
 pub struct ListPatterns {
     #[serde(rename = "listPattern-type-standard")]
     pub standard: ListPattern,
@@ -65,7 +64,7 @@ pub struct ListPatterns {
     pub or_short: ListPattern,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ListPattern {
     pub start: String,

@@ -8,7 +8,7 @@ use crate::styling::theme::Theme;
 use crate::tokio::tokio_helper::TokioHelper;
 use crate::tracing::application_log::ApplicationLog;
 use crate::window::window_globals::WindowGlobals;
-use cntp_i18n::{I18N_MANAGER, i18n_manager, tr, tr_load};
+use cntp_i18n::{I18N_MANAGER, tr, tr_load};
 use gpui::{Action, App, AsyncApp, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -92,7 +92,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
         )])
     }
 
-    I18N_MANAGER.write().unwrap().load_source(tr_load!());
+    I18N_MANAGER.load_source(tr_load!());
 
     let (i18n_cache_eviction_tx, i18n_cache_eviction_rx) = async_channel::bounded(1);
     cx.spawn(async move |cx: &mut AsyncApp| {
@@ -111,7 +111,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             let _ = smol::block_on(i18n_cache_eviction_tx.send(()));
         });
 
-    let locale = &i18n_manager!().locale;
+    let locale = I18N_MANAGER.locale();
 
     let mut application_menu_items = vec![
         MenuItem::action(

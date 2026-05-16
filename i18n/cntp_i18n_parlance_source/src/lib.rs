@@ -309,7 +309,7 @@ impl CntpI18nParlanceSource {
                                 language_entries
                                     .insert(key.clone(), Box::leak(boxed) as &'static I18nEntry);
 
-                                I18N_MANAGER.write().unwrap().evict_key(&key);
+                                I18N_MANAGER.evict_key(&key);
 
                                 info!("Translation updated: {} {}", language, key);
                             }
@@ -429,6 +429,6 @@ pub async fn install_cntp_i18n_parlance_source(
         crate_name.into(),
     )
     .await?;
-    I18N_MANAGER.write().unwrap().load_source(source);
+    I18N_MANAGER.load_source(source);
     Ok(())
 }

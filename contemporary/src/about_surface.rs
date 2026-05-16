@@ -10,7 +10,7 @@ use crate::components::layer::layer;
 use crate::components::subtitle::subtitle;
 use crate::styling::theme::ThemeStorage;
 use crate::surface::surface;
-use cntp_i18n::{i18n_manager, tr};
+use cntp_i18n::{tr, I18N_MANAGER};
 use gpui::prelude::FluentBuilder;
 use gpui::{
     App, ClickEvent, ImageSource, IntoElement, ParentElement, RenderOnce, Resource, SharedString,
@@ -74,7 +74,7 @@ impl RenderOnce for AboutSurface {
         let details = cx.global::<Details>();
         let versions = cx.global::<Versions>();
 
-        let locale = &i18n_manager!().locale;
+        let locale = I18N_MANAGER.locale();
 
         surface().child(
             div()

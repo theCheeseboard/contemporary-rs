@@ -1,5 +1,5 @@
 use crate::cldr::ListPatterns;
-use crate::{ListFunction, ListWidth, Locale};
+use crate::{ListFunction, ListWidth};
 use std::fmt::Display;
 
 /// A builder struct for formatting a list of strings in a locale.
