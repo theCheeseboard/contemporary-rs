@@ -4,11 +4,13 @@ use std::fs::File;
 use std::io::BufReader;
 use std::iter;
 use std::path::Path;
-use tracing::{debug, info};
+use std::process::{Command, exit};
+use tracing::{debug, error, info, warn};
 use xml::attribute::Attribute;
 use xml::name::Name;
 use xml::reader::XmlEvent;
 use xml::{EmitterConfig, EventReader, writer};
+use yaml_rust::{ScanError, Yaml, YamlLoader};
 
 const CNTP_RS_NAMESPACE: &str = "https://vicr123.com/contemporary/metainfo";
 
@@ -37,7 +39,6 @@ pub fn copy_appstream_metainfo(
     let mut off_depth = 0_u32;
     let mut start_event = None;
     for e in input_reader {
-        info!("Processing XML event: {:?}", e);
         let e = e?;
         match &e {
             XmlEvent::StartElement {
@@ -129,5 +130,71 @@ pub fn copy_appstream_metainfo(
         }
     }
 
+    validate_appstream_metainfo(source);
+
     Ok(())
+}
+
+fn validate_appstream_metainfo(path: &Path) {
+    let Ok(output) = Command::new("appstreamcli")
+        .args(["validate", "--format", "yaml", path.to_str().unwrap()])
+        .output()
+    else {
+        warn!(
+            "Unable to run appstreamcli to validate AppStream metainfo file. Please install appstreamcli."
+        );
+        return;
+    };
+
+    let docs = match YamlLoader::load_from_str(&String::from_utf8_lossy(&output.stdout)) {
+        Ok(docs) => docs,
+        Err(e) => {
+            warn!("Failed to parse appstreamcli YAML: {}", e);
+            return;
+        }
+    };
+    let Some(doc) = docs.first() else {
+        warn!("Failed to parse appstreamcli YAML: no YAML documents");
+        return;
+    };
+
+    let Some(passed) = &doc["Passed"].as_str() else {
+        warn!("Failed to parse appstreamcli YAML: no 'Passed' key");
+        return;
+    };
+
+    if let Some(issues) = &doc["Issues"].as_vec()
+        && !issues.is_empty()
+    {
+        for issue in issues.iter() {
+            let _ = print_appstream_validation(issue);
+        }
+
+        if *passed == "no" {
+            error!(
+                "appstream: validation failed: {} issues found. Please fix your AppStream metadata.",
+                issues.len()
+            );
+            exit(1);
+        } else {
+            info!("appstream: {} issues found", issues.len());
+        }
+    }
+}
+
+fn print_appstream_validation(structure: &Yaml) -> Option<()> {
+    let severity = structure["severity"].as_str()?;
+    let component = structure["component"]
+        .as_str()
+        .unwrap_or("[unknown component]");
+    let tag = structure["tag"].as_str()?;
+    let explanation = structure["explanation"].as_str()?;
+
+    match severity {
+        "warning" => warn!("appstream: {component}: {tag}   {explanation}"),
+        "error" => error!("appstream: {component}: {tag}   {explanation}"),
+        _ => info!("appstream: {component}: {tag}   {explanation}"),
+    }
+
+    Some(())
 }

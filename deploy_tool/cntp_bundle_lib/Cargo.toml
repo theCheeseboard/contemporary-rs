@@ -23,6 +23,7 @@ tiff = "0.10.0"
 elf = { workspace = true }
 ld-so-cache = { workspace = true }
 xml = { workspace = true }
+yaml-rust = { workspace = true }
 
 [target.'cfg(target_os="windows")'.dependencies]
 winres-edit = "=0.2.0"
