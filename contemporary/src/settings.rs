@@ -119,7 +119,7 @@ where
     }
 }
 
-pub trait Setting: Serialize + Deserialize + Default {
+pub trait Setting: Serialize + for<'a> Deserialize<'a> + Default {
     fn file_name() -> &'static str;
 
     fn directory() -> Option<PathBuf> {
