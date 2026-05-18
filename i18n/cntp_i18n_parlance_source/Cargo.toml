@@ -1,6 +1,6 @@
 [package]
 name = "cntp_i18n_parlance_source"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 license = "MIT"
 keywords = ["i18n", "cntp", "l10n", "translation"]
@@ -8,7 +8,7 @@ categories = ["internationalization", "localization"]
 description = "Support library for integrating cntp-i18n with the Parlance TMS"
 
 [dependencies]
-cntp_i18n = { path = "../cntp_i18n", version = "0.2.0" }
+cntp_i18n = { path = "../cntp_i18n", version = "0.3.0" }
 zed-reqwest = { workspace = true }
 url = { workspace = true }
 serde = { workspace = true }
