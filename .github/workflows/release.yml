@@ -1,0 +1,19 @@
+name: "Release to crates.io"
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          rustup update
+      - name: Release Crate
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: |
+          ./publish-all.sh
