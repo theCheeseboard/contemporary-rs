@@ -5,7 +5,7 @@ use crate::jobs::jobs_menu::jobs_menu;
 use crate::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, BorderStyle, BorrowAppContext, Bounds, Context, Corner, Corners, Entity, IntoElement,
+    Anchor, App, BorderStyle, BorrowAppContext, Bounds, Context, Corners, Entity, IntoElement,
     ParentElement, Path, PathBuilder, Pixels, Point, Render, Rgba, Size, Styled, Window, canvas,
     div, px, quad, rgb, transparent_black,
 };
@@ -81,8 +81,8 @@ impl Render for JobButton {
                                         bounds.center(),
                                         Size::new(px(20.), px(20.)),
                                     );
-                                    let ping_bounds = Bounds::from_corner_and_size(
-                                        Corner::BottomRight,
+                                    let ping_bounds = Bounds::from_anchor_and_size(
+                                        Anchor::BottomRight,
                                         progress_bounds.bottom_right(),
                                         Size::new(px(8.), px(8.)),
                                     );

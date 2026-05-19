@@ -21,8 +21,8 @@ members = [
 ]
 
 [workspace.dependencies]
-gpui = { version = "0.231", package = "gpui-unofficial" }
-gpui_platform = { version = "0.231", package = "gpui-platform-gpui-unofficial", features = ["x11", "wayland", "font-kit"] }
+gpui = { version = "1.2", package = "gpui-unofficial" }
+gpui_platform = { version = "1.2", package = "gpui-platform-gpui-unofficial", features = ["x11", "wayland", "font-kit"] }
 indexmap = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
