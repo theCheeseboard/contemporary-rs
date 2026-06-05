@@ -15,6 +15,7 @@ use gpui::{
 use std::collections::HashMap;
 use std::panic::Location;
 use std::rc::Rc;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 #[derive(IntoElement)]
@@ -27,11 +28,48 @@ pub struct Pager {
     force_direction: Option<PagerAnimationDirection>,
 }
 
-pub fn pager(id: impl Into<ElementId>, page: usize) -> Pager {
+pub trait PageNumber {
+    fn page_number(&self) -> usize;
+}
+
+impl PageNumber for usize {
+    fn page_number(&self) -> usize {
+        *self
+    }
+}
+
+impl<T> PageNumber for Box<T>
+where
+    T: PageNumber,
+{
+    fn page_number(&self) -> usize {
+        self.as_ref().page_number()
+    }
+}
+
+impl<T> PageNumber for Rc<T>
+where
+    T: PageNumber,
+{
+    fn page_number(&self) -> usize {
+        self.as_ref().page_number()
+    }
+}
+
+impl<T> PageNumber for Arc<T>
+where
+    T: PageNumber,
+{
+    fn page_number(&self) -> usize {
+        self.as_ref().page_number()
+    }
+}
+
+pub fn pager(id: impl Into<ElementId>, page: impl PageNumber) -> Pager {
     Pager {
         id: id.into(),
         elements: vec![],
-        page,
+        page: page.page_number(),
         style_refinement: StyleRefinement::default(),
         animation: None,
         force_direction: None,
@@ -258,8 +296,7 @@ pub struct ManagedPager {
     force_direction: Option<PagerAnimationDirection>,
 }
 
-pub trait ManagedPagerPage {
-    fn order(&self) -> usize;
+pub trait ManagedPagerPage: PageNumber {
     fn render(&self, window: &mut Window, cx: &mut App) -> AnyElement;
 }
 
@@ -305,12 +342,12 @@ impl RenderOnce for ManagedPager {
         let pager_state = window.use_state(cx, |_, _| ManagedPagerState::default());
 
         let max_page = pager_state.update(cx, |state, cx| {
-            state.cached_pages.insert(page.order(), page.clone());
+            state.cached_pages.insert(page.page_number(), page.clone());
 
             *state.cached_pages.keys().max().unwrap()
         });
 
-        let mut pager = pager(self.id, page.order());
+        let mut pager = pager(self.id, page.page_number());
         for i in 0..=max_page {
             pager = pager.page(
                 pager_state

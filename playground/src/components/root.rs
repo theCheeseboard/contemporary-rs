@@ -12,7 +12,7 @@ use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::lift_animation::LiftAnimation;
 use contemporary::components::pager::pager_animation::PagerAnimationDirection;
-use contemporary::components::pager::{ManagedPagerPage, pager_managed};
+use contemporary::components::pager::{ManagedPagerPage, PageNumber, pager_managed};
 use contemporary::components::scrollbar::SelfScrollable;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
@@ -82,8 +82,8 @@ impl ComponentsPage {
     }
 }
 
-impl ManagedPagerPage for ComponentsPage {
-    fn order(&self) -> usize {
+impl PageNumber for ComponentsPage {
+    fn page_number(&self) -> usize {
         match self {
             ComponentsPage::Buttons(_) => 0,
             ComponentsPage::CheckboxesRadioButtons(_) => 1,
@@ -96,7 +96,9 @@ impl ManagedPagerPage for ComponentsPage {
             ComponentsPage::ScrollAreas(_) => 8,
         }
     }
+}
 
+impl ManagedPagerPage for ComponentsPage {
     fn render(&self, window: &mut Window, cx: &mut App) -> AnyElement {
         <Self as RenderOnce>::render(self.clone(), window, cx).into_any_element()
     }
@@ -185,7 +187,7 @@ impl Render for ComponentsRoot {
                                     for page in pages {
                                         items.push(
                                             div()
-                                                .id(page.order())
+                                                .id(page.page_number())
                                                 .p(px(2.))
                                                 .rounded(theme.border_radius)
                                                 .on_click({
@@ -197,7 +199,8 @@ impl Render for ComponentsRoot {
                                                 })
                                                 .child(page.name())
                                                 .when(
-                                                    this.current_page.order() == page.order(),
+                                                    this.current_page.page_number()
+                                                        == page.page_number(),
                                                     |div| div.bg(theme.button_background),
                                                 ),
                                         );
