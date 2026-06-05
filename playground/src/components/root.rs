@@ -7,18 +7,18 @@ use crate::components::ranges::Ranges;
 use crate::components::scroll_areas::ScrollAreas;
 use crate::components::skeletons::Skeletons;
 use crate::components::text_input::TextInput;
-use cntp_i18n::tr;
+use cntp_i18n::{I18nString, tr};
 use contemporary::components::grandstand::grandstand;
 use contemporary::components::layer::layer;
 use contemporary::components::pager::lift_animation::LiftAnimation;
-use contemporary::components::pager::pager;
 use contemporary::components::pager::pager_animation::PagerAnimationDirection;
+use contemporary::components::pager::{ManagedPagerPage, pager_managed};
 use contemporary::components::scrollbar::SelfScrollable;
 use contemporary::styling::theme::ThemeStorage;
 use gpui::prelude::FluentBuilder;
 use gpui::{
-    App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement, Render,
-    StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
+    AnyElement, App, AppContext, Context, Entity, InteractiveElement, IntoElement, ParentElement,
+    Render, RenderOnce, StatefulInteractiveElement, Styled, Window, div, px, uniform_list,
 };
 
 pub struct ComponentsRoot {
@@ -32,28 +32,130 @@ pub struct ComponentsRoot {
     interstitials: Entity<Interstitials>,
     scroll_areas: Entity<ScrollAreas>,
 
-    current_page: usize,
+    current_page: ComponentsPage,
+}
+
+#[derive(Clone)]
+pub enum ComponentsPage {
+    Buttons(Entity<Buttons>),
+    CheckboxesRadioButtons(Entity<CheckboxesRadioButtons>),
+    TextInput(Entity<TextInput>),
+    ProgressBars(Entity<ProgressBars>),
+    Ranges(Entity<Ranges>),
+    Skeletons(Entity<Skeletons>),
+    Admonitions(Entity<Admonitions>),
+    Interstitials(Entity<Interstitials>),
+    ScrollAreas(Entity<ScrollAreas>),
+}
+
+impl ComponentsPage {
+    fn name(&self) -> I18nString {
+        match self {
+            ComponentsPage::Buttons(_) => {
+                tr!("BUTTONS_TITLE")
+            }
+            ComponentsPage::CheckboxesRadioButtons(_) => {
+                tr!("CHECKBOXES_RADIO_BUTTONS_TITLE")
+            }
+            ComponentsPage::TextInput(_) => {
+                tr!("TEXT_INPUT_TITLE")
+            }
+            ComponentsPage::ProgressBars(_) => {
+                tr!("PROGRESS_BARS_TITLE")
+            }
+            ComponentsPage::Ranges(_) => {
+                tr!("RANGES_TITLE")
+            }
+            ComponentsPage::Skeletons(_) => {
+                tr!("SKELETONS_TITLE")
+            }
+            ComponentsPage::Admonitions(_) => {
+                tr!("ADMONITIONS_TITLE")
+            }
+            ComponentsPage::Interstitials(_) => {
+                tr!("INTERSTITIALS_TITLE", "Interstitials")
+            }
+            ComponentsPage::ScrollAreas(_) => {
+                tr!("SCROLL_AREAS_TITLE", "Scroll Areas")
+            }
+        }
+    }
+}
+
+impl ManagedPagerPage for ComponentsPage {
+    fn order(&self) -> usize {
+        match self {
+            ComponentsPage::Buttons(_) => 0,
+            ComponentsPage::CheckboxesRadioButtons(_) => 1,
+            ComponentsPage::TextInput(_) => 2,
+            ComponentsPage::ProgressBars(_) => 3,
+            ComponentsPage::Ranges(_) => 4,
+            ComponentsPage::Skeletons(_) => 5,
+            ComponentsPage::Admonitions(_) => 6,
+            ComponentsPage::Interstitials(_) => 7,
+            ComponentsPage::ScrollAreas(_) => 8,
+        }
+    }
+
+    fn render(&self, window: &mut Window, cx: &mut App) -> AnyElement {
+        <Self as RenderOnce>::render(self.clone(), window, cx).into_any_element()
+    }
+}
+
+impl RenderOnce for ComponentsPage {
+    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
+        match self {
+            ComponentsPage::Buttons(buttons) => buttons.clone().into_any_element(),
+            ComponentsPage::CheckboxesRadioButtons(checkboxes_radio_buttons) => {
+                checkboxes_radio_buttons.into_any_element()
+            }
+            ComponentsPage::TextInput(text_input) => text_input.clone().into_any_element(),
+            ComponentsPage::ProgressBars(progress_bars) => progress_bars.clone().into_any_element(),
+            ComponentsPage::Ranges(ranges) => ranges.clone().into_any_element(),
+            ComponentsPage::Skeletons(skeletons) => skeletons.clone().into_any_element(),
+            ComponentsPage::Admonitions(admonitions) => admonitions.clone().into_any_element(),
+            ComponentsPage::Interstitials(interstitials) => {
+                interstitials.clone().into_any_element()
+            }
+            ComponentsPage::ScrollAreas(scroll_areas) => scroll_areas.clone().into_any_element(),
+        }
+    }
 }
 
 impl ComponentsRoot {
     pub fn new(cx: &mut App) -> Entity<ComponentsRoot> {
-        cx.new(|cx| ComponentsRoot {
-            buttons: Buttons::new(cx),
-            checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
-            text_input: TextInput::new(cx),
-            progress_bars: ProgressBars::new(cx),
-            ranges: Ranges::new(cx),
-            skeletons: Skeletons::new(cx),
-            admonitions: Admonitions::new(cx),
-            interstitials: Interstitials::new(cx),
-            scroll_areas: cx.new(ScrollAreas::new),
-            current_page: 0,
+        cx.new(|cx| {
+            let buttons = Buttons::new(cx);
+            ComponentsRoot {
+                buttons: buttons.clone(),
+                checkboxes_radio_buttons: CheckboxesRadioButtons::new(cx),
+                text_input: TextInput::new(cx),
+                progress_bars: ProgressBars::new(cx),
+                ranges: Ranges::new(cx),
+                skeletons: Skeletons::new(cx),
+                admonitions: Admonitions::new(cx),
+                interstitials: Interstitials::new(cx),
+                scroll_areas: cx.new(ScrollAreas::new),
+                current_page: ComponentsPage::Buttons(buttons),
+            }
         })
     }
 }
 
 impl Render for ComponentsRoot {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let pages = vec![
+            ComponentsPage::Buttons(self.buttons.clone()),
+            ComponentsPage::CheckboxesRadioButtons(self.checkboxes_radio_buttons.clone()),
+            ComponentsPage::TextInput(self.text_input.clone()),
+            ComponentsPage::ProgressBars(self.progress_bars.clone()),
+            ComponentsPage::Ranges(self.ranges.clone()),
+            ComponentsPage::Skeletons(self.skeletons.clone()),
+            ComponentsPage::Admonitions(self.admonitions.clone()),
+            ComponentsPage::Interstitials(self.interstitials.clone()),
+            ComponentsPage::ScrollAreas(self.scroll_areas.clone()),
+        ];
+
         div()
             .id("components")
             .flex()
@@ -75,40 +177,29 @@ impl Render for ComponentsRoot {
                             uniform_list(
                                 "sidebar-items",
                                 9,
-                                cx.processor(|this, range, _, cx| {
+                                cx.processor(move |this, range, _, cx| {
                                     let theme = cx.theme();
                                     let mut items = Vec::new();
-                                    for ix in range {
-                                        let item = ix + 1;
 
+                                    let pages: &[ComponentsPage] = &pages[range];
+                                    for page in pages {
                                         items.push(
                                             div()
-                                                .id(ix)
+                                                .id(page.order())
                                                 .p(px(2.))
                                                 .rounded(theme.border_radius)
-                                                .on_click(cx.listener(move |this, _, _, cx| {
-                                                    this.current_page = ix;
-                                                    cx.notify()
-                                                }))
-                                                .child(match ix {
-                                                    0 => tr!("BUTTONS_TITLE"),
-                                                    1 => tr!("CHECKBOXES_RADIO_BUTTONS_TITLE"),
-                                                    2 => tr!("TEXT_INPUT_TITLE"),
-                                                    3 => tr!("PROGRESS_BARS_TITLE"),
-                                                    4 => tr!("RANGES_TITLE"),
-                                                    5 => tr!("SKELETONS_TITLE"),
-                                                    6 => tr!("ADMONITIONS_TITLE"),
-                                                    7 => {
-                                                        tr!("INTERSTITIALS_TITLE", "Interstitials")
-                                                    }
-                                                    8 => {
-                                                        tr!("SCROLL_AREAS_TITLE", "Scroll Areas")
-                                                    }
-                                                    _ => format!("Item {item}").into(),
+                                                .on_click({
+                                                    let page = page.clone();
+                                                    cx.listener(move |this, _, _, cx| {
+                                                        this.current_page = page.clone();
+                                                        cx.notify()
+                                                    })
                                                 })
-                                                .when(this.current_page == ix, |div| {
-                                                    div.bg(theme.button_background)
-                                                }),
+                                                .child(page.name())
+                                                .when(
+                                                    this.current_page.order() == page.order(),
+                                                    |div| div.bg(theme.button_background),
+                                                ),
                                         );
                                     }
                                     items
@@ -121,19 +212,10 @@ impl Render for ComponentsRoot {
                     ),
             )
             .child(
-                pager("main-area", self.current_page)
+                pager_managed("main-area", self.current_page.clone())
                     .flex_grow()
                     .animation(LiftAnimation::new())
-                    .animation_direction(PagerAnimationDirection::Forward)
-                    .page(self.buttons.clone())
-                    .page(self.checkboxes_radio_buttons.clone())
-                    .page(self.text_input.clone())
-                    .page(self.progress_bars.clone())
-                    .page(self.ranges.clone())
-                    .page(self.skeletons.clone())
-                    .page(self.admonitions.clone())
-                    .page(self.interstitials.clone())
-                    .page(self.scroll_areas.clone()),
+                    .animation_direction(PagerAnimationDirection::Forward),
             )
     }
 }

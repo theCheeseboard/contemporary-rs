@@ -12,7 +12,9 @@ use gpui::{
     InteractiveElement, IntoElement, LayoutId, ParentElement, Pixels, Refineable, RenderOnce,
     Style, StyleRefinement, Styled, Window, div,
 };
+use std::collections::HashMap;
 use std::panic::Location;
+use std::rc::Rc;
 use std::time::{Duration, Instant};
 
 #[derive(IntoElement)]
@@ -44,12 +46,12 @@ impl Pager {
         self
     }
 
-    pub fn animation(mut self, animation: Box<dyn PagerAnimation>) -> Pager {
+    pub fn animation(mut self, animation: Box<dyn PagerAnimation>) -> Self {
         self.animation = Some(animation);
         self
     }
 
-    pub fn animation_direction(mut self, direction: PagerAnimationDirection) -> Pager {
+    pub fn animation_direction(mut self, direction: PagerAnimationDirection) -> Self {
         self.force_direction = Some(direction);
         self
     }
@@ -244,5 +246,89 @@ impl Element for PagerInternal {
             // Render the current page at the top
             request_layout.current_page.paint(window, cx);
         }
+    }
+}
+
+#[derive(IntoElement)]
+pub struct ManagedPager {
+    id: ElementId,
+    page: Rc<dyn ManagedPagerPage>,
+    style_refinement: StyleRefinement,
+    animation: Option<Box<dyn PagerAnimation>>,
+    force_direction: Option<PagerAnimationDirection>,
+}
+
+pub trait ManagedPagerPage {
+    fn order(&self) -> usize;
+    fn render(&self, window: &mut Window, cx: &mut App) -> AnyElement;
+}
+
+pub fn pager_managed(
+    id: impl Into<ElementId>,
+    page: impl ManagedPagerPage + 'static,
+) -> ManagedPager {
+    ManagedPager {
+        id: id.into(),
+        page: Rc::new(page),
+        style_refinement: StyleRefinement::default(),
+        animation: None,
+        force_direction: None,
+    }
+}
+
+#[derive(Default)]
+struct ManagedPagerState {
+    cached_pages: HashMap<usize, Rc<dyn ManagedPagerPage>>,
+}
+
+impl ManagedPager {
+    pub fn animation(mut self, animation: Box<dyn PagerAnimation>) -> Self {
+        self.animation = Some(animation);
+        self
+    }
+
+    pub fn animation_direction(mut self, direction: PagerAnimationDirection) -> Self {
+        self.force_direction = Some(direction);
+        self
+    }
+}
+
+impl Styled for ManagedPager {
+    fn style(&mut self) -> &mut StyleRefinement {
+        &mut self.style_refinement
+    }
+}
+
+impl RenderOnce for ManagedPager {
+    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let page = self.page;
+        let pager_state = window.use_state(cx, |_, _| ManagedPagerState::default());
+
+        let max_page = pager_state.update(cx, |state, cx| {
+            state.cached_pages.insert(page.order(), page.clone());
+
+            *state.cached_pages.keys().max().unwrap()
+        });
+
+        let mut pager = pager(self.id, page.order());
+        for i in 0..=max_page {
+            pager = pager.page(
+                pager_state
+                    .read(cx)
+                    .cached_pages
+                    .get(&i)
+                    .cloned()
+                    .map(|x| x.render(window, cx))
+                    .unwrap_or_else(|| div().into_any_element()),
+            );
+        }
+        if let Some(animation) = self.animation {
+            pager = pager.animation(animation)
+        }
+        if let Some(direction) = self.force_direction {
+            pager = pager.animation_direction(direction);
+        }
+        pager.style().refine(&self.style_refinement);
+        pager
     }
 }
