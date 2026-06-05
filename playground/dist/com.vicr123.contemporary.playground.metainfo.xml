@@ -15,6 +15,8 @@
         <control>touch</control>
     </recommends>
 
+    <url type="homepage">https://github.com/theCheeseboard/contemporary-rs</url>
+
     <description>
         <p cntp:trkey="METAINFO_DESCRIPTION">Play with the Contemporary design system and controls</p>
     </description>

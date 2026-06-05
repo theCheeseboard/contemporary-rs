@@ -3,10 +3,10 @@ pub mod desktop_entry;
 pub mod shared_libraries;
 
 use crate::icon::get_svg_icon_contents;
-use crate::linux::APPRUN_TEMPLATE;
 use crate::linux::bundle::appstream_metainfo::copy_appstream_metainfo;
 use crate::linux::bundle::desktop_entry::generate_desktop_entry;
 use crate::linux::bundle::shared_libraries::copy_shared_libraries;
+use crate::linux::{APPIMAGE_RUNTIME_XDG_OPEN, APPRUN_TEMPLATE};
 use crate::tool_setup::ToolSetup;
 use cntp_config::{ContemporaryConfig, LocalisedString};
 use resvg::render;
@@ -91,21 +91,7 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
         exit(1);
     };
 
-    let apprun_path = appdir_root.join("AppRun");
-    let apprun_contents = APPRUN_TEMPLATE.replace(
-        "{{APPLICATION_PAYLOAD}}",
-        &PathBuf::from("usr/bin")
-            .join(executable_path.file_name().unwrap())
-            .to_string_lossy(),
-    );
-    let Ok(_) = write(&apprun_path, apprun_contents) else {
-        error!("Failed to write AppRun");
-        exit(1);
-    };
-    let Ok(_) = set_permissions(&apprun_path, Permissions::from_mode(0o755)) else {
-        error!("Failed to set permissions on AppRun");
-        exit(1);
-    };
+    setup_appimage_runtime(&appdir_root, &executable_path);
 
     let Ok(desktop_entry_contents) = generate_desktop_entry(
         target_triple,
@@ -184,5 +170,46 @@ pub fn bundle_linux(setup_data: &ToolSetup, executable_path: HashMap<String, Pat
             error!("Failed to write appstream metainfo: {}", e);
             exit(1);
         }
+    }
+}
+
+fn setup_appimage_runtime(appdir_root: &Path, executable_path: &Path) {
+    // Set up AppImage runtime
+    let apprun_path = appdir_root.join("AppRun");
+    let apprun_contents = APPRUN_TEMPLATE.replace(
+        "{{APPLICATION_PAYLOAD}}",
+        &PathBuf::from("usr/bin")
+            .join(executable_path.file_name().unwrap())
+            .to_string_lossy(),
+    );
+    let Ok(_) = write(&apprun_path, apprun_contents) else {
+        error!("Failed to write AppRun");
+        exit(1);
+    };
+    let Ok(_) = set_permissions(&apprun_path, Permissions::from_mode(0o755)) else {
+        error!("Failed to set permissions on AppRun");
+        exit(1);
+    };
+
+    let appimage_runtime_path = appdir_root.join("appimage_runtime");
+    let appimage_runtime_bin_path = appimage_runtime_path.join("bin");
+
+    let written_files = HashMap::from([(
+        appimage_runtime_bin_path.join("xdg-open"),
+        APPIMAGE_RUNTIME_XDG_OPEN,
+    )]);
+    for (path, contents) in written_files {
+        let Ok(_) = create_dir_all(path.parent().unwrap()) else {
+            error!("Failed to create {}", path.parent().unwrap().display());
+            exit(1);
+        };
+        let Ok(_) = write(&path, contents) else {
+            error!("Failed to write {}", path.display());
+            exit(1);
+        };
+        let Ok(_) = set_permissions(&path, Permissions::from_mode(0o755)) else {
+            error!("Failed to set permissions on {}", path.display());
+            exit(1);
+        };
     }
 }
