@@ -145,7 +145,7 @@
   },
   "DEBUG_LOG": {
     "context": "debug_log.rs",
-    "definedIn": "src/debug_log.rs:17",
+    "definedIn": "src/debug_log.rs:18",
     "plural": false,
     "description": null
   },

@@ -3,10 +3,11 @@ use crate::styling::theme::{ThemeStorage, VariableColor};
 use crate::tracing::application_log::ApplicationLog;
 use crate::window::contemporary_window;
 use cntp_i18n::{tr, trf};
+use gpui::prelude::FluentBuilder;
 use gpui::{
     App, AppContext, Context, IntoElement, ParentElement, Render, Styled, TitlebarOptions,
-    UniformListScrollHandle, Window, WindowBounds, WindowOptions, bounds, div, point, px, rgb,
-    size, transparent_black, uniform_list,
+    UniformListScrollHandle, Window, WindowBounds, WindowOptions, bounds, div, linear_color_stop,
+    linear_gradient, point, px, rgba, size, transparent_black, uniform_list,
 };
 use tracing::Level;
 
@@ -27,7 +28,7 @@ pub fn open_debug_log(cx: &mut App) {
     );
 }
 
-pub struct DebugLog {
+struct DebugLog {
     scroll_handle: UniformListScrollHandle,
 }
 
@@ -76,48 +77,77 @@ impl Render for DebugLog {
                     range
                         .map(|index| {
                             if let Some(entry) = log.entries().get(index) {
-                                div()
-                                    .p(px(2.))
-                                    .overflow_hidden()
-                                    .font_family(theme.monospaced_font_family.clone())
-                                    .text_size(theme.system_font_size * 0.75)
-                                    .flex()
-                                    .items_center()
-                                    .gap(px(4.))
-                                    .child(div().w(px(4.)).rounded(theme.border_radius).bg(
-                                        match entry.level {
-                                            Level::ERROR => rgb(0xFF0000),
-                                            Level::WARN => rgb(0xFFFF00),
-                                            Level::INFO => rgb(0x00FF00),
-                                            Level::DEBUG => transparent_black().into(),
-                                            Level::TRACE => transparent_black().into(),
-                                            _ => transparent_black().into(),
-                                        },
-                                    ))
-                                    .child(
-                                        div()
-                                            .w(px(60.))
-                                            .text_color(theme.foreground.disabled())
-                                            .text_size(theme.system_font_size * 0.6)
-                                            .child(trf!(
-                                                date("T", length = "long"),
-                                                entry.timestamp
-                                            )),
-                                    )
-                                    .child(
-                                        div()
-                                            .w(px(200.))
-                                            .text_color(theme.foreground.disabled())
-                                            .text_size(theme.system_font_size * 0.6)
-                                            .child(entry.target.clone()),
-                                    )
-                                    .child(
-                                        div()
-                                            .text_ellipsis()
-                                            .overflow_hidden()
-                                            .flex_grow()
-                                            .child(entry.message.clone()),
-                                    )
+                                div().px(px(4.)).py(px(2.)).w_full().child(
+                                    div()
+                                        .rounded(theme.border_radius)
+                                        .when(index & 0b1 == 1, |david| {
+                                            david.bg(theme.layer_background)
+                                        })
+                                        .w_full()
+                                        .overflow_hidden()
+                                        .font_family(theme.monospaced_font_family.clone())
+                                        .text_size(theme.system_font_size * 0.75)
+                                        .flex()
+                                        .gap(px(4.))
+                                        .child(
+                                            div()
+                                                .min_w(px(8.))
+                                                .mr(px(-4.))
+                                                .h(theme.system_font_size + px(4.))
+                                                .flex()
+                                                .rounded_l(theme.border_radius)
+                                                .bg(match entry.level {
+                                                    Level::ERROR => linear_gradient(
+                                                        90.,
+                                                        linear_color_stop(rgba(0xC80000FF), 0.),
+                                                        linear_color_stop(rgba(0xC8000000), 1.),
+                                                    ),
+                                                    Level::WARN => linear_gradient(
+                                                        90.,
+                                                        linear_color_stop(rgba(0xC86400FF), 0.),
+                                                        linear_color_stop(rgba(0xC8640000), 1.),
+                                                    ),
+                                                    Level::INFO => linear_gradient(
+                                                        90.,
+                                                        linear_color_stop(rgba(0x0064FFFF), 0.),
+                                                        linear_color_stop(rgba(0x0064FF00), 1.),
+                                                    ),
+                                                    Level::DEBUG => transparent_black().into(),
+                                                    Level::TRACE => transparent_black().into(),
+                                                    _ => transparent_black().into(),
+                                                }),
+                                        )
+                                        .child(
+                                            div()
+                                                .flex()
+                                                .items_center()
+                                                .min_w(px(60.))
+                                                .text_color(theme.foreground.disabled())
+                                                .text_size(theme.system_font_size * 0.6)
+                                                .child(trf!(
+                                                    date("T", length = "long"),
+                                                    entry.timestamp
+                                                )),
+                                        )
+                                        .child(
+                                            div()
+                                                .flex()
+                                                .items_center()
+                                                .min_w(px(200.))
+                                                .text_color(theme.foreground.disabled())
+                                                .text_size(theme.system_font_size * 0.6)
+                                                .child(entry.target.clone()),
+                                        )
+                                        .child(
+                                            div()
+                                                .flex()
+                                                .items_center()
+                                                .text_ellipsis()
+                                                .overflow_hidden()
+                                                .flex_grow()
+                                                .child(entry.message.clone()),
+                                        ),
+                                )
                             } else {
                                 div()
                             }
