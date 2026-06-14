@@ -1,6 +1,7 @@
 use crate::application::{ApplicationLink, Details, Versions};
 use crate::components::context_menu::bind_context_menu_keys;
 use crate::components::text_field::bind_text_field_keys;
+use crate::debug_log::open_debug_log;
 use crate::jobs::job_manager::JobManager;
 use crate::platform_support::platform_settings::PlatformSettings;
 use crate::platform_support::setup_platform;
@@ -8,6 +9,7 @@ use crate::settings::SettingsManager;
 use crate::styling::theme::Theme;
 use crate::tokio::tokio_helper::TokioHelper;
 use crate::tracing::application_log::ApplicationLog;
+use crate::tracing::layer::ContemporaryLayer;
 use crate::window::window_globals::WindowGlobals;
 use cntp_i18n::{I18N_MANAGER, tr, tr_load};
 use gpui::{Action, App, AsyncApp, Global, KeyBinding, Menu, MenuItem, SystemMenuType, actions};
@@ -24,7 +26,9 @@ use url::Url;
 
 actions!(
     contemporary,
-    [Quit, HideSelf, HideOthers, ShowAll, About, Settings]
+    [
+        Quit, HideSelf, HideOthers, ShowAll, About, Settings, DebugLog
+    ]
 );
 
 #[derive(PartialEq, Clone, Default, Deserialize, JsonSchema, Action)]
@@ -52,13 +56,13 @@ struct Callbacks {
 impl Global for Callbacks {}
 
 pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
-    let (_tracing_channel_tx, tracing_channel_rx) = async_channel::bounded(5);
+    let (tracing_channel_tx, tracing_channel_rx) = async_channel::bounded(5);
 
     let application_log = ApplicationLog::new(cx, tracing_channel_rx);
     cx.set_global(application_log);
 
     tracing_subscriber::registry()
-        // .with(ContemporaryLayer::new(tracing_channel_tx))
+        .with(ContemporaryLayer::new(tracing_channel_tx))
         .with(tracing_subscriber::fmt::layer().without_time().with_filter(
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info")),
         ))
@@ -74,6 +78,7 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.on_action(about);
     cx.on_action(settings);
     cx.on_action(open_link);
+    cx.on_action(debug_log);
     cx.bind_keys([KeyBinding::new("cmd-h", HideSelf, None)]);
     cx.bind_keys([KeyBinding::new("cmd-alt-h", HideOthers, None)]);
     cx.bind_keys([KeyBinding::new("secondary-q", Quit, None)]);
@@ -235,6 +240,10 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
             }
         })
         .flatten()
+        .chain([
+            MenuItem::separator(),
+            MenuItem::action(tr!("MENU_DEBUG_LOG", "View Debug Log"), DebugLog),
+        ])
         .collect();
 
     menus.push(Menu {
@@ -307,4 +316,8 @@ fn settings(_: &Settings, cx: &mut App) {
 
 fn open_link(action: &OpenLink, cx: &mut App) {
     cx.open_url(&action.link);
+}
+
+fn debug_log(_: &DebugLog, cx: &mut App) {
+    open_debug_log(cx);
 }

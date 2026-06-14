@@ -6,6 +6,7 @@ use crate::components::button::button;
 use crate::components::icon::icon;
 use crate::components::icon_text::icon_text;
 use crate::components::scrim::scrim;
+use crate::setup::DebugLog;
 use crate::setup::{About, OpenLink};
 use crate::styling::theme::{ThemeStorage, VariableColor};
 use cntp_i18n::{I18N_MANAGER, tr};
@@ -185,6 +186,13 @@ impl Render for ApplicationMenu {
                                                         }
                                                     })
                                                     .flatten()
+                                                    .chain([
+                                                        MenuItem::separator(),
+                                                        MenuItem::action(
+                                                            tr!("MENU_DEBUG_LOG"),
+                                                            DebugLog,
+                                                        ),
+                                                    ])
                                                     .collect();
 
                                                 if !menu_items.is_empty() {

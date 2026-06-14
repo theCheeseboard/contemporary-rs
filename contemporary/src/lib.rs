@@ -24,6 +24,7 @@ pub mod self_update;
 #[cfg(feature = "tokio")]
 pub mod tokio;
 
+pub mod debug_log;
 pub mod settings;
 #[cfg(feature = "parlance")]
 pub mod setup_parlance;

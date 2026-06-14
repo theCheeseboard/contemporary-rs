@@ -30,8 +30,9 @@ where
             channel_tx
                 .send(ApplicationLogEntry {
                     level,
-                    target,
-                    message: visitor.message(),
+                    timestamp: chrono::Local::now(),
+                    target: target.into(),
+                    message: visitor.message().into(),
                 })
                 .await
         })
