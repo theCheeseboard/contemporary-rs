@@ -144,7 +144,7 @@ impl RenderOnce for WindowTitle {
                 div()
                     .flex()
                     .h(px(40.))
-                    .flex_grow()
+                    .flex_grow(1.)
                     .content_stretch()
                     .child(self.actions),
             )

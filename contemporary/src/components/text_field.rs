@@ -477,7 +477,7 @@ impl Render for TextField {
             )
             .child(
                 div()
-                    .flex_grow()
+                    .flex_grow(1.)
                     .when(self.has_border, |david| {
                         david
                             .p(px(2.))

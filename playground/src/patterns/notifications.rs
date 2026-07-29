@@ -167,7 +167,7 @@ impl Notifications {
                         div()
                             .flex()
                             .flex_col()
-                            .flex_grow()
+                            .flex_grow(1.)
                             .child(subtitle(
                                 notification.summary().unwrap_or_default().to_string(),
                             ))
@@ -296,7 +296,7 @@ impl Render for Notifications {
                                                 "NOTIFICATION_DEFAULT_ACTION_PROMPT",
                                                 "Enable Default Action"
                                             ))
-                                            .child(div().flex_grow())
+                                            .child(div().flex_grow(1.))
                                             .child(
                                                 switch("default-action-switch")
                                                     .when(self.has_default_action, |david| {
@@ -317,7 +317,7 @@ impl Render for Notifications {
                                                 "NOTIFICATION_REPLY_ACTION_PROMPT",
                                                 "Enable Reply Action"
                                             ))
-                                            .child(div().flex_grow())
+                                            .child(div().flex_grow(1.))
                                             .child(
                                                 switch("reply-action-switch")
                                                     .when(self.has_reply_action, |david| {
@@ -338,7 +338,7 @@ impl Render for Notifications {
                                                 "NOTIFICATION_MUTED_PROMPT",
                                                 "Notify Silently"
                                             ))
-                                            .child(div().flex_grow())
+                                            .child(div().flex_grow(1.))
                                             .child(
                                                 switch("muted-action-switch")
                                                     .when(self.is_muted, |david| david.checked())

@@ -94,16 +94,16 @@ impl RenderOnce for Popover {
                 .w_full()
                 .h_full()
                 .when(self.anchor == Anchor::Top, |david| {
-                    david.flex_col_reverse().child(div().flex_grow())
+                    david.flex_col_reverse().child(div().flex_grow(1.))
                 })
                 .when(self.anchor == Anchor::Bottom, |david| {
-                    david.flex_col().child(div().flex_grow())
+                    david.flex_col().child(div().flex_grow(1.))
                 })
                 .when(self.anchor == Anchor::Leading, |david| {
-                    david.flex_row_reverse().child(div().flex_grow())
+                    david.flex_row_reverse().child(div().flex_grow(1.))
                 })
                 .when(self.anchor == Anchor::Trailing, |david| {
-                    david.flex_row().child(div().flex_grow())
+                    david.flex_row().child(div().flex_grow(1.))
                 })
                 .child(
                     div()

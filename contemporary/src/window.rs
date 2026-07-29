@@ -209,7 +209,7 @@ impl RenderOnce for ContemporaryWindow {
                     .m(window_margins)
                     .flex()
                     .flex_col()
-                    .flex_grow()
+                    .flex_grow(1.)
                     .bg(theme.background)
                     .rounded(theme.border_radius)
                     .overflow_hidden(),

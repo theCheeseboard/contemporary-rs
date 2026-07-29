@@ -462,7 +462,7 @@ impl Render for Jobs {
                     },
                     cx,
                 )
-                .flex_grow(),
+                .flex_grow(1.),
             )
     }
 }

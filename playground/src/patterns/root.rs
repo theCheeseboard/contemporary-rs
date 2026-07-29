@@ -68,7 +68,7 @@ impl Render for PatternsRoot {
                             .pt(px(36.)),
                     )
                     .child(
-                        div().flex_grow().p(px(2.)).child(
+                        div().flex_grow(1.).p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
                                 8,
@@ -114,7 +114,7 @@ impl Render for PatternsRoot {
             )
             .child(
                 pager("main-area", self.current_page)
-                    .flex_grow()
+                    .flex_grow(1.)
                     .animation(LiftAnimation::new())
                     .animation_direction(PagerAnimationDirection::Forward)
                     .page(self.dialog_boxes.clone().into_any_element())

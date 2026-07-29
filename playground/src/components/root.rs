@@ -175,7 +175,7 @@ impl Render for ComponentsRoot {
                             .pt(px(36.)),
                     )
                     .child(
-                        div().flex_grow().p(px(2.)).child(
+                        div().flex_grow(1.).p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
                                 9,
@@ -216,7 +216,7 @@ impl Render for ComponentsRoot {
             )
             .child(
                 pager_managed("main-area", self.current_page.clone())
-                    .flex_grow()
+                    .flex_grow(1.)
                     .animation(LiftAnimation::new())
                     .animation_direction(PagerAnimationDirection::Forward),
             )

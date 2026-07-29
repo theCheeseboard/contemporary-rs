@@ -133,7 +133,7 @@ impl Render for Buttons {
                                     .flex()
                                     .gap(px(8.))
                                     .child(
-                                        div().flex_grow().child(
+                                        div().flex_grow(1.).child(
                                             button("button-1")
                                                 .child(tr!(
                                                     "BUTTONS_DEFAULT_BUTTON",
@@ -161,14 +161,14 @@ impl Render for Buttons {
                                                 ))),
                                         ),
                                     )
-                                    .child(div().flex_grow().child(
+                                    .child(div().flex_grow(1.).child(
                                         button("button-2").disabled().child(tr!(
                                             "BUTTONS_DISABLED_BUTTON",
                                             "Disabled Button"
                                         )),
                                     ))
                                     .child(
-                                        div().flex_grow().child(
+                                        div().flex_grow(1.).child(
                                             button("button-3")
                                                 .child(tr!(
                                                     "BUTTONS_CHECKABLE_BUTTON",
@@ -240,7 +240,7 @@ impl Render for Buttons {
                                     .child(
                                         button("button-flat-1")
                                             .flat()
-                                            .flex_grow()
+                                            .flex_grow(1.)
                                             .child(tr!("BUTTONS_FLAT_BUTTON", "Flat Button"))
                                             .on_click(|_, _, cx| cx.beep()),
                                     )
@@ -248,7 +248,7 @@ impl Render for Buttons {
                                         button("button-flat-2")
                                             .flat()
                                             .disabled()
-                                            .flex_grow()
+                                            .flex_grow(1.)
                                             .child(tr!(
                                                 "BUTTONS_FLAT_DISABLED_BUTTON",
                                                 "Flat Disabled Button"
@@ -257,7 +257,7 @@ impl Render for Buttons {
                                     .child(
                                         button("button-flat-3")
                                             .flat()
-                                            .flex_grow()
+                                            .flex_grow(1.)
                                             .child(tr!(
                                                 "BUTTONS_FLAT_CHECKABLE_BUTTON",
                                                 "Flat Checkable Button"

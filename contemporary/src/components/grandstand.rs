@@ -66,7 +66,7 @@ impl RenderOnce for Grandstand {
             self.div.flex().flex_row().child(
                 div()
                     .flex()
-                    .flex_grow()
+                    .flex_grow(1.)
                     .justify_center()
                     .gap(px(4.))
                     .when_some(self.on_back_click, move |div, on_click| {
@@ -83,7 +83,7 @@ impl RenderOnce for Grandstand {
                     .child(
                         div()
                             .flex()
-                            .flex_grow()
+                            .flex_grow(1.)
                             .items_center()
                             .text_size(theme.heading_font_size)
                             .child(self.text)

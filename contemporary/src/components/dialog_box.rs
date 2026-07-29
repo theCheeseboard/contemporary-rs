@@ -128,7 +128,7 @@ impl RenderOnce for DialogBox {
 
         let buttons_layer = self.buttons.into_iter().fold(
             layer().flex().p(px(9.)).gap(px(6.)),
-            move |layer, button| layer.child(button.flex_grow()),
+            move |layer, button| layer.child(button.flex_grow(1.)),
         );
 
         self.scrim.visible(self.visible).child(

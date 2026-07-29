@@ -144,7 +144,7 @@ impl Render for DebugLog {
                                                 .items_center()
                                                 .text_ellipsis()
                                                 .overflow_hidden()
-                                                .flex_grow()
+                                                .flex_grow(1.)
                                                 .child(entry.message.clone()),
                                         ),
                                 )
@@ -157,7 +157,7 @@ impl Render for DebugLog {
                 .track_scroll(&self.scroll_handle)
                 .scrollable(self.scroll_handle.clone())
                 .h_full()
-                .flex_grow(),
+                .flex_grow(1.),
             ),
         )
     }

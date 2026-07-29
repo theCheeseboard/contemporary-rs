@@ -103,7 +103,7 @@ impl Render for Toasts {
                                             .flex()
                                             .gap(px(4.))
                                             .child(tr!("TOAST_SEVERITY", "Severity"))
-                                            .child(div().flex_grow())
+                                            .child(div().flex_grow(1.))
                                             .child(
                                                 radio_button("severity-info")
                                                     .label(tr!("SEVERITY_INFO", "Info"))

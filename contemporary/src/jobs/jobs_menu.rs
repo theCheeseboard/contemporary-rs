@@ -52,7 +52,7 @@ impl RenderOnce for JobsMenu {
                                 job.read(cx).borrow().element()
                             })
                             .p(px(10.))
-                            .flex_grow()
+                            .flex_grow(1.)
                             .w_full(),
                         ),
                 )

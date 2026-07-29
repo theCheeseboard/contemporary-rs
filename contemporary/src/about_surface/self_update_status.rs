@@ -124,7 +124,7 @@ impl RenderOnce for SelfUpdateStatus {
                 .flex()
                 .items_center()
                 .child(text)
-                .child(div().flex_grow())
+                .child(div().flex_grow(1.))
                 .child(button),
         )
     }
