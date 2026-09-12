@@ -149,6 +149,9 @@ mod hardcoded_i18n_source;
 #[cfg(feature = "pseudotranslation")]
 mod pseudotranslation;
 
+#[cfg(feature = "tracing")]
+pub mod tracing;
+
 /// The global i18n manager instance.
 ///
 /// This is the central point for managing translations in your application. It holds

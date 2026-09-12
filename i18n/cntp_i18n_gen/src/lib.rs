@@ -237,7 +237,7 @@ pub struct VisitorError {
 impl<'ast> Visit<'ast> for TrMacroVisitor {
     fn visit_macro(&mut self, mac: &'ast Macro) {
         match mac.path.segments.last().unwrap().ident.to_string().as_str() {
-            "tr" | "tr_noop" => {
+            "tr" | "tr_noop" | "tr_trace" | "tr_debug" | "tr_info" | "tr_warn" | "tr_error" => {
                 if let Ok(contents) = syn::parse2::<TrMacroInput>(mac.tokens.clone()) {
                     if let Some(default_string) = contents.default_string {
                         let replaced = self.strings.insert(
@@ -285,7 +285,7 @@ impl<'ast> Visit<'ast> for TrMacroVisitor {
                     }
                 }
             }
-            "trn" | "trn_noop" => {
+            "trn" | "trn_noop" | "trn_trace" | "trn_debug" | "trn_info" | "trn_warn" | "trn_error" => {
                 if let Ok(contents) = syn::parse2::<TrnMacroInput>(mac.tokens.clone()) {
                     let category_count = self.plural_rules.categories().count();
                     let string_count = contents.default_strings.len();
