@@ -21,7 +21,7 @@ const NUMBER_EXTENSIONS: &[&str] = &[
     "one",
 ];
 
-pub fn mangle(string: &String) -> String {
+pub fn mangle(string: &str) -> String {
     string
         .chars()
         .map(|c| match c {

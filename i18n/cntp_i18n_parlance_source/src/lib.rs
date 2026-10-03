@@ -14,6 +14,7 @@ use tracing::{error, info, warn};
 use url::ParseError;
 use zed_reqwest::{Client, Url};
 
+#[allow(unused)]
 pub struct CntpI18nParlanceSource {
     base_url: Url,
     project: String,
@@ -26,6 +27,7 @@ pub struct CntpI18nParlanceSource {
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+#[allow(unused)]
 struct ParlanceEntry {
     key: String,
     context: String,
