@@ -31,9 +31,11 @@
 //! ```
 
 mod date;
+mod fixed;
 mod quote;
 
 pub use date::Date;
+pub use fixed::Fixed;
 pub use quote::Quote;
 
 use crate::Locale;

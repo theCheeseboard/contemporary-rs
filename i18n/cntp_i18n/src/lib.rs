@@ -137,7 +137,7 @@ pub use cntp_i18n_core::{
     string::I18nString,
 };
 pub use cntp_localesupport::locale_formattable::LocaleFormattable;
-pub use cntp_localesupport::modifiers::{Date, Quote, StringModifier};
+pub use cntp_localesupport::modifiers::{Date, Quote, Fixed, StringModifier};
 pub use cntp_localesupport::{LayoutDirection, ListFunction, Locale};
 pub use modifiers::*;
 pub use phf;

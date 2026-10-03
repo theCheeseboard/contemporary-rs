@@ -17,6 +17,7 @@ pub fn resolve_modifier(path: Path) -> proc_macro2::TokenStream {
         match name.as_str() {
             "quote" => quote! { cntp_i18n::Quote },
             "date" => quote! { cntp_i18n::Date },
+            "fixed" => quote! { cntp_i18n::Fixed },
             _ => quote! { #path },
         }
     } else {

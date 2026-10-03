@@ -86,7 +86,7 @@ mod test {
 
     #[test]
     fn string_modifier() {
-        let locale = Locale::new_from_locale_identifier("en_US");
+        let locale = Locale::new_from_locale_identifier("en-US");
         let modifier = Quote;
         let result = modifier.transform(&locale, "Hello", &[]);
         assert_eq!(result, "\"Hello\"");
@@ -94,7 +94,7 @@ mod test {
 
     #[test]
     fn alternate_string_modifier() {
-        let locale = Locale::new_from_locale_identifier("en_US");
+        let locale = Locale::new_from_locale_identifier("en-US");
         let modifier = Quote;
         let result = modifier.transform(&locale, "Hello", &[&(None, "alt")]);
         assert_eq!(result, "'Hello'");
