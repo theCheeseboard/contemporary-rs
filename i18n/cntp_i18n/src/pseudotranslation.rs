@@ -75,7 +75,7 @@ pub fn mangle(string: &str) -> String {
 }
 
 pub fn contain(string: &String, len: usize) -> String {
-    let mut extension_length = (len * 7) / 10;
+    let mut extension_length = ((len * 7) / 10).min(1);
     let mut all_extensions = NUMBER_EXTENSIONS.to_vec();
     let mut extensions = Vec::new();
 
