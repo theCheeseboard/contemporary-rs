@@ -1242,6 +1242,7 @@ dependencies = [
 name = "cntp_i18n"
 version = "0.3.0"
 dependencies = [
+ "chrono",
  "cntp_i18n_core",
  "cntp_i18n_macros",
  "cntp_localesupport",

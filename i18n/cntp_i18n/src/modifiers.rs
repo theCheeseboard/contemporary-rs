@@ -1,3 +1,7 @@
+#[doc(hidden)]
+pub mod hash;
+
+use crate::hash::ModifierTransformHash;
 use cntp_localesupport::Locale;
 use cntp_localesupport::modifiers::{ModifierVariable, StringModifier};
 use rustc_hash::FxHasher;
@@ -19,13 +23,13 @@ pub trait ErasedStringModifierTransform {
 ///
 /// This is used by the macro expansion and should not be used directly.
 #[doc(hidden)]
-pub struct BaseStringModifierInvocation<'a, T: ?Sized + Hash>(
+pub struct BaseStringModifierInvocation<'a, T: ?Sized + ModifierTransformHash>(
     &'a dyn StringModifier<&'a T>,
     &'a [ModifierVariable<'a>],
     &'a T,
 );
 
-impl<'a, T: ?Sized + Hash> BaseStringModifierInvocation<'a, T> {
+impl<'a, T: ?Sized + ModifierTransformHash> BaseStringModifierInvocation<'a, T> {
     /// Create a new base modifier invocation.
     #[doc(hidden)]
     pub fn new(
@@ -37,7 +41,9 @@ impl<'a, T: ?Sized + Hash> BaseStringModifierInvocation<'a, T> {
     }
 }
 
-impl<'a, T: ?Sized + Hash> ErasedStringModifierTransform for BaseStringModifierInvocation<'a, T> {
+impl<'a, T: ?Sized + ModifierTransformHash> ErasedStringModifierTransform
+    for BaseStringModifierInvocation<'a, T>
+{
     fn transform(&self, locale: &Locale) -> String {
         let BaseStringModifierInvocation(modifier, variables, input) = self;
         modifier.transform(locale, input, variables)
@@ -92,7 +98,7 @@ impl Variable<'_> {
             Variable::Modified(modifier, _) => {
                 modifier.hash(state);
             }
-            Variable::String(string) => string.hash(state),
+            Variable::String(string) => ModifierTransformHash::hash(string, state),
             Variable::Count(count) => count.hash(state),
         }
     }

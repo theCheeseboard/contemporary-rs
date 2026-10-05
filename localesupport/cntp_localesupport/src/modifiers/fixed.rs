@@ -31,18 +31,35 @@ use icu::decimal::input::Decimal;
 /// - `"(number)"`: Fix at the specified distance
 pub struct Fixed;
 
-impl StringModifier<&str> for Fixed {
+impl StringModifier<f64> for Fixed {
     fn transform<'a>(
         &self,
         locale: &Locale,
-        input: &str,
+        input: f64,
         variables: &'a [ModifierVariable<'a>],
     ) -> String {
         let fixed_length = -variables
             .first()
             .map(|(_, value)| value.parse::<i16>().expect("Invalid fixed length"))
             .unwrap_or(0);
-        let mut decimal = Decimal::try_from_str(input).unwrap();
+        let mut decimal = Decimal::try_from_str(&input.to_string()).unwrap();
+        decimal.absolute.round(fixed_length);
+        locale.format_decimal(decimal)
+    }
+}
+
+impl StringModifier<f32> for Fixed {
+    fn transform<'a>(
+        &self,
+        locale: &Locale,
+        input: f32,
+        variables: &'a [ModifierVariable<'a>],
+    ) -> String {
+        let fixed_length = -variables
+            .first()
+            .map(|(_, value)| value.parse::<i16>().expect("Invalid fixed length"))
+            .unwrap_or(0);
+        let mut decimal = Decimal::try_from_str(&input.to_string()).unwrap();
         decimal.absolute.round(fixed_length);
         locale.format_decimal(decimal)
     }
@@ -60,7 +77,7 @@ mod test {
     fn fixed_default() {
         let locale = Locale::new_from_locale_identifier("en-US");
         let modifier = Fixed;
-        let result = modifier.transform(&locale, &&&*std::f32::consts::PI.to_string(), &[]);
+        let result = modifier.transform(&locale, std::f32::consts::PI, &[]);
         assert_eq!(result, format!("{:.0}", std::f32::consts::PI));
     }
 
@@ -68,11 +85,7 @@ mod test {
     fn fixed_one() {
         let locale = Locale::new_from_locale_identifier("en-US");
         let modifier = Fixed;
-        let result = modifier.transform(
-            &locale,
-            &&&*std::f32::consts::PI.to_string(),
-            &[&(None, "1")],
-        );
+        let result = modifier.transform(&locale, std::f32::consts::PI, &[&(None, "1")]);
         assert_eq!(result, format!("{:.1}", std::f32::consts::PI));
     }
 
@@ -80,11 +93,7 @@ mod test {
     fn fixed_five_dutch() {
         let locale = Locale::new_from_locale_identifier("nl-NL");
         let modifier = Fixed;
-        let result = modifier.transform(
-            &locale,
-            &&&*std::f32::consts::PI.to_string(),
-            &[&(None, "5")],
-        );
+        let result = modifier.transform(&locale, std::f32::consts::PI, &[&(None, "5")]);
         assert_eq!(
             result,
             format!("{:.5}", std::f32::consts::PI).replace(".", ",")
@@ -95,7 +104,7 @@ mod test {
     fn fixed_big_dutch() {
         let locale = Locale::new_from_locale_identifier("nl-NL");
         let modifier = Fixed;
-        let result = modifier.transform(&locale, &&"31415.92773", &[&(None, "5")]);
+        let result = modifier.transform(&locale, 31415.92773, &[&(None, "5")]);
         assert_eq!(result, "31.415,92773");
     }
 
@@ -103,7 +112,7 @@ mod test {
     fn fixed_big_egyptian_arabic() {
         let locale = Locale::new_from_locale_identifier("ar-EG");
         let modifier = Fixed;
-        let result = modifier.transform(&locale, &&"31415.92773", &[&(None, "5")]);
+        let result = modifier.transform(&locale, 31415.92773, &[&(None, "5")]);
         assert_eq!(result, "٣١٬٤١٥٫٩٢٧٧٣");
     }
 }
