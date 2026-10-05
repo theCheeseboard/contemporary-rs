@@ -1,4 +1,4 @@
-use chrono::{DateTime, TimeZone};
+use chrono::{DateTime, NaiveDateTime, TimeZone};
 use std::hash::{Hash, Hasher};
 
 #[doc(hidden)]
@@ -34,3 +34,6 @@ where
         Hash::hash(self, state);
     }
 }
+
+#[cfg(feature = "chrono")]
+implement_modifier_transform_hash_with_hash!(NaiveDateTime);
