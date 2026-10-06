@@ -6,13 +6,12 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::time::Duration;
 
-pub type Jobling = Rc<RefCell<dyn Job>>;
-pub type JoblingEntity = Entity<Jobling>;
+pub type JobEntity = Entity<Box<dyn Job>>;
 
 pub struct JobManager {
-    jobs: Vec<JoblingEntity>,
+    jobs: Vec<JobEntity>,
     pub is_job_menu_open: bool,
-    unfinished_jobs: Vec<JoblingEntity>,
+    unfinished_jobs: Vec<JobEntity>,
 }
 
 #[derive(Copy, Clone, PartialEq)]
@@ -39,14 +38,13 @@ impl JobManager {
         }
     }
 
-    pub fn track_job(&mut self, job: JoblingEntity, cx: &mut App) {
+    pub fn track_job(&mut self, job: JobEntity, cx: &mut App) {
         cx.observe(&job, |job_entity, cx| {
             cx.update_global::<Self, ()>(|this, cx| {
                 let job = job_entity.read(cx);
-                let job_borrow = job.borrow();
 
-                if job_borrow.transient()
-                    && job_borrow.status().is_complete()
+                if job.transient()
+                    && job.status().is_complete()
                     && this.unfinished_jobs.contains(&job_entity)
                 {
                     this.unfinished_jobs.retain(|job| *job != job_entity);
@@ -58,7 +56,7 @@ impl JobManager {
         self.unfinished_jobs.push(job);
     }
 
-    pub fn track_job_delayed(&mut self, job: JoblingEntity, delay: Duration, cx: &mut App) {
+    pub fn track_job_delayed(&mut self, job: JobEntity, delay: Duration, cx: &mut App) {
         let cancellation_token_source = CancellationTokenSource::new();
         let cancellation_token = cancellation_token_source.token();
 
@@ -72,7 +70,7 @@ impl JobManager {
             cx.update_global::<Self, ()>(|this, cx| {
                 let should_track = cx.read_entity(&job_clone, |job_item, _cx| {
                     // Track the job because it's taking too long
-                    job_item.borrow().status() != JobStatus::Completed
+                    job_item.status() != JobStatus::Completed
                 });
 
                 if should_track && !cancellation_token.is_canceled() {
@@ -84,7 +82,7 @@ impl JobManager {
 
         cx.observe(&job.clone(), move |job_entity, cx| {
             if matches!(
-                job.read(cx).borrow().status(),
+                job.read(cx).status(),
                 JobStatus::RequiresAttention | JobStatus::Failed
             ) {
                 // Immediately register the job now
@@ -97,17 +95,16 @@ impl JobManager {
         .detach();
     }
 
-    pub fn track_job_delayed_default(&mut self, job: JoblingEntity, cx: &mut App) {
+    pub fn track_job_delayed_default(&mut self, job: JobEntity, cx: &mut App) {
         self.track_job_delayed(job, Duration::from_secs(1), cx);
     }
 
-    fn tracked_jobs(&self, cx: &App) -> impl Iterator<Item = &JoblingEntity> {
+    fn tracked_jobs(&self, cx: &App) -> impl Iterator<Item = &JobEntity> {
         self.jobs.iter().filter(|job| {
             let job = job.read(cx);
-            let job_borrow = job.borrow();
-            !job_borrow.transient()
+            !job.transient()
                 || matches!(
-                    job_borrow.status(),
+                    job.status(),
                     JobStatus::InProgress | JobStatus::RequiresAttention
                 )
         })
@@ -117,14 +114,14 @@ impl JobManager {
         self.tracked_jobs(cx).count()
     }
 
-    pub fn job(&self, index: usize, cx: &App) -> Option<&JoblingEntity> {
+    pub fn job(&self, index: usize, cx: &App) -> Option<&JobEntity> {
         self.tracked_jobs(cx).nth(index)
     }
 
     pub fn aggregate_progress(&self, cx: &App) -> f32 {
         self.unfinished_jobs
             .iter()
-            .map(|job| job.read(cx).borrow().progress())
+            .map(|job| job.read(cx).progress())
             .sum::<f32>()
             / self.unfinished_jobs.len() as f32
     }
@@ -134,7 +131,7 @@ impl JobManager {
         if open {
             let complete_jobs: Vec<_> = self
                 .tracked_jobs(cx)
-                .filter(|job| job.read(cx).borrow().status().is_complete())
+                .filter(|job| job.read(cx).status().is_complete())
                 .cloned()
                 .collect();
             self.unfinished_jobs
@@ -146,7 +143,7 @@ impl JobManager {
         let unfinished_jobs: Vec<_> = self
             .unfinished_jobs
             .iter()
-            .map(|job| job.read(cx).borrow())
+            .map(|job| job.read(cx))
             .collect();
         if unfinished_jobs.is_empty() {
             JobButtonState::Hidden

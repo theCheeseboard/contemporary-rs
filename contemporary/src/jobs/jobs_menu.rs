@@ -49,7 +49,7 @@ impl RenderOnce for JobsMenu {
                             list(list_state, |index, _, cx| {
                                 let job_manager = cx.global::<JobManager>();
                                 let job = job_manager.job(index, cx).unwrap();
-                                job.read(cx).borrow().element()
+                                job.read(cx).element()
                             })
                             .p(px(10.))
                             .flex_grow(1.)

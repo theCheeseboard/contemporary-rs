@@ -361,19 +361,19 @@
   },
   "FAILING_JOB_COMPLETE_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:210",
+    "definedIn": "src/patterns/jobs.rs:188",
     "plural": false,
     "description": null
   },
   "FAILING_JOB_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:185",
+    "definedIn": "src/patterns/jobs.rs:169",
     "plural": false,
     "description": null
   },
   "FAILING_JOB_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:183",
+    "definedIn": "src/patterns/jobs.rs:167",
     "plural": false,
     "description": null
   },
@@ -571,13 +571,13 @@
   },
   "INDETERMINATE_JOB_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:108",
+    "definedIn": "src/patterns/jobs.rs:102",
     "plural": false,
     "description": null
   },
   "INDETERMINATE_JOB_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:106",
+    "definedIn": "src/patterns/jobs.rs:100",
     "plural": false,
     "description": null
   },
@@ -613,97 +613,97 @@
   },
   "JOBS_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:414",
+    "definedIn": "src/patterns/jobs.rs:374",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:247",
+    "definedIn": "src/patterns/jobs.rs:224",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:255",
+    "definedIn": "src/patterns/jobs.rs:232",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK_FAIL": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:353",
+    "definedIn": "src/patterns/jobs.rs:319",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK_FAIL_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:363",
+    "definedIn": "src/patterns/jobs.rs:329",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK_FAIL_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:359",
+    "definedIn": "src/patterns/jobs.rs:325",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:265",
+    "definedIn": "src/patterns/jobs.rs:242",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_QUICK_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:261",
+    "definedIn": "src/patterns/jobs.rs:238",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_SLOW": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:306",
+    "definedIn": "src/patterns/jobs.rs:278",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_SLOW_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:313",
+    "definedIn": "src/patterns/jobs.rs:285",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_SLOW_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:311",
+    "definedIn": "src/patterns/jobs.rs:283",
     "plural": false,
     "description": null
   },
   "JOB_DELAYED_TRACKING_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:238",
+    "definedIn": "src/patterns/jobs.rs:215",
     "plural": false,
     "description": null
   },
   "JOB_FAILING_START": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:180",
+    "definedIn": "src/patterns/jobs.rs:164",
     "plural": false,
     "description": null
   },
   "JOB_INDETERMINATE_START": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:101",
+    "definedIn": "src/patterns/jobs.rs:95",
     "plural": false,
     "description": null
   },
   "JOB_MENU_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:442",
+    "definedIn": "src/patterns/jobs.rs:402",
     "plural": false,
     "description": null
   },
   "JOB_MENU_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:435",
+    "definedIn": "src/patterns/jobs.rs:395",
     "plural": false,
     "description": null
   },
@@ -715,7 +715,7 @@
   },
   "JOB_TRANSIENT_START": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:136",
+    "definedIn": "src/patterns/jobs.rs:127",
     "plural": false,
     "description": null
   },
@@ -841,7 +841,7 @@
   },
   "OPEN_JOB_MENU": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:450",
+    "definedIn": "src/patterns/jobs.rs:410",
     "plural": false,
     "description": null
   },
@@ -1009,7 +1009,7 @@
   },
   "STANDARD_JOB_COMPLETE_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:84",
+    "definedIn": "src/patterns/jobs.rs:79",
     "plural": false,
     "description": null
   },
@@ -1111,13 +1111,13 @@
   },
   "TRANSIENT_JOB_IN_PROGRESS_DESCRIPTION": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:141",
+    "definedIn": "src/patterns/jobs.rs:132",
     "plural": false,
     "description": null
   },
   "TRANSIENT_JOB_TITLE": {
     "context": "jobs.rs",
-    "definedIn": "src/patterns/jobs.rs:139",
+    "definedIn": "src/patterns/jobs.rs:130",
     "plural": false,
     "description": null
   }
