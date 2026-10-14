@@ -2,6 +2,7 @@ mod dialog_boxes;
 mod directories;
 mod flyouts;
 mod i18n;
+pub mod inhibitions;
 mod jobs;
 mod notifications;
 mod popovers;

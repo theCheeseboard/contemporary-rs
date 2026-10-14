@@ -587,6 +587,60 @@
     "plural": false,
     "description": null
   },
+  "INHIBITIONS_DESCRIPTION": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:99",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITIONS_DISPLAY_SLEEP": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:120",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITIONS_IDLE_SLEEP": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:107",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITIONS_REASON": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:35",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITIONS_TITLE": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:76",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITION_ACTIVE": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:151",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITION_ACTIVE_DESCRIPTION": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:153",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITION_SET": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:138",
+    "plural": false,
+    "description": null
+  },
+  "INHIBITION_STOP": {
+    "context": "inhibitions.rs",
+    "definedIn": "src/patterns/inhibitions.rs:161",
+    "plural": false,
+    "description": null
+  },
   "INTERSTITIALS_TITLE": {
     "context": "root.rs",
     "definedIn": "src/components/root.rs:76",
@@ -859,7 +913,7 @@
   },
   "PATTERNS_TITLE": {
     "context": "root.rs",
-    "definedIn": "src/patterns/root.rs:67",
+    "definedIn": "src/patterns/root.rs:70",
     "plural": false,
     "description": null
   },

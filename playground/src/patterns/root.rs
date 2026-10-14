@@ -2,6 +2,7 @@ use crate::patterns::dialog_boxes::DialogBoxes;
 use crate::patterns::directories::Directories;
 use crate::patterns::flyouts::Flyouts;
 use crate::patterns::i18n::I18n;
+use crate::patterns::inhibitions::Inhibitions;
 use crate::patterns::jobs::Jobs;
 use crate::patterns::notifications::Notifications;
 use crate::patterns::popovers::Popovers;
@@ -29,6 +30,7 @@ pub struct PatternsRoot {
     flyouts: Entity<Flyouts>,
     notifications: Entity<Notifications>,
     toasts: Entity<Toasts>,
+    inhibitions: Entity<Inhibitions>,
 
     current_page: usize,
 }
@@ -44,6 +46,7 @@ impl PatternsRoot {
             flyouts: Flyouts::new(cx),
             notifications: Notifications::new(cx),
             toasts: Toasts::new(cx),
+            inhibitions: cx.new(|cx| Inhibitions::new(cx)),
             current_page: 0,
         })
     }
@@ -71,7 +74,7 @@ impl Render for PatternsRoot {
                         div().flex_grow(1.).p(px(2.)).child(
                             uniform_list(
                                 "sidebar-items",
-                                8,
+                                9,
                                 cx.processor(|this, range, _, cx| {
                                     let theme = cx.theme();
                                     let mut items = Vec::new();
@@ -96,6 +99,7 @@ impl Render for PatternsRoot {
                                                     5 => tr!("DIRECTORIES_TITLE"),
                                                     6 => tr!("NOTIFICATIONS_TITLE"),
                                                     7 => tr!("TOASTS_TITLE"),
+                                                    8 => tr!("INHIBITIONS_TITLE"),
                                                     _ => format!("Item {item}").into(),
                                                 })
                                                 .when(this.current_page == ix, |div| {
@@ -117,14 +121,15 @@ impl Render for PatternsRoot {
                     .flex_grow(1.)
                     .animation(LiftAnimation::new())
                     .animation_direction(PagerAnimationDirection::Forward)
-                    .page(self.dialog_boxes.clone().into_any_element())
-                    .page(self.i18n.clone().into_any_element())
-                    .page(self.popovers.clone().into_any_element())
-                    .page(self.flyouts.clone().into_any_element())
-                    .page(self.jobs.clone().into_any_element())
-                    .page(self.directories.clone().into_any_element())
-                    .page(self.notifications.clone().into_any_element())
-                    .page(self.toasts.clone().into_any_element()),
+                    .page(self.dialog_boxes.clone())
+                    .page(self.i18n.clone())
+                    .page(self.popovers.clone())
+                    .page(self.flyouts.clone())
+                    .page(self.jobs.clone())
+                    .page(self.directories.clone())
+                    .page(self.notifications.clone())
+                    .page(self.toasts.clone())
+                    .page(self.inhibitions.clone()),
             )
     }
 }

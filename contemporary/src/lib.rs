@@ -25,6 +25,7 @@ pub mod self_update;
 pub mod tokio;
 
 pub mod debug_log;
+pub mod inhibit;
 pub mod settings;
 #[cfg(feature = "parlance")]
 pub mod setup_parlance;
