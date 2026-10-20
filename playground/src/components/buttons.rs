@@ -147,6 +147,7 @@ impl Render for Buttons {
                                                                 mouse_event.down.modifiers.shift
                                                             }
                                                             ClickEvent::Keyboard(_) => false,
+                                                            ClickEvent::Touch(_) => false
                                                         } {
                                                             this.buttons_click_count = 0
                                                         } else {
