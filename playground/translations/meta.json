@@ -55,7 +55,7 @@
   },
   "BUTTONS_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:174",
+    "definedIn": "src/components/buttons.rs:175",
     "plural": false,
     "description": null
   },
@@ -67,7 +67,7 @@
   },
   "BUTTONS_COUNT_TEXT": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:189",
+    "definedIn": "src/components/buttons.rs:190",
     "plural": true,
     "description": null
   },
@@ -79,37 +79,37 @@
   },
   "BUTTONS_DEFAULT_BUTTON_TOOLTIP": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:159",
+    "definedIn": "src/components/buttons.rs:160",
     "plural": false,
     "description": null
   },
   "BUTTONS_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:166",
+    "definedIn": "src/components/buttons.rs:167",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:244",
+    "definedIn": "src/components/buttons.rs:245",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_CHECKABLE_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:262",
+    "definedIn": "src/components/buttons.rs:263",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_DISABLED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:253",
+    "definedIn": "src/components/buttons.rs:254",
     "plural": false,
     "description": null
   },
   "BUTTONS_FLAT_TITLE": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:235",
+    "definedIn": "src/components/buttons.rs:236",
     "plural": false,
     "description": null
   },
@@ -775,7 +775,7 @@
   },
   "JOINED_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:209",
+    "definedIn": "src/components/buttons.rs:210",
     "plural": false,
     "description": null
   },
@@ -997,7 +997,7 @@
   },
   "RIGHT_CLICK_BUTTON": {
     "context": "buttons.rs",
-    "definedIn": "src/components/buttons.rs:221",
+    "definedIn": "src/components/buttons.rs:222",
     "plural": false,
     "description": null
   },

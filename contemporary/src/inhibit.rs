@@ -26,6 +26,9 @@ impl Inhibition {
                 target_os = "macos" => {
                     Box::new(crate::platform_support::macos::inhibit::inhibit(reason, types)?)
                 }
+                target_os = "windows" => {
+                    Box::new(crate::platform_support::windows::inhibit::inhibit(reason, types)?)
+                }
                 // Inhibitions not supported on this platform
                 _ => Box::new(())
             },
