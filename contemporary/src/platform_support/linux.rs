@@ -1,6 +1,7 @@
 mod cx_platform_linux_extensions;
 mod desktop_environment;
 mod gnome;
+pub mod inhibit;
 mod kde;
 pub mod notification;
 pub mod platform_settings;
