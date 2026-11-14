@@ -13,7 +13,7 @@ default = ["chrono", "pseudotranslation"]
 pseudotranslation = []
 
 [dependencies]
-icu = { workspace = true, features = ["experimental"] }
+icu = { workspace = true, features = ["unstable"] }
 locale_config = { workspace = true }
 rust-embed = { workspace = true }
 serde = { workspace = true }

@@ -1,6 +1,6 @@
 use crate::tokio::Tokio;
-use gpui::http_client::anyhow;
-use gpui::private::anyhow::Error;
+use anyhow::anyhow;
+use anyhow::Error;
 use gpui::{AppContext, AsyncApp};
 use std::fmt::{Debug, Display};
 

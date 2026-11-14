@@ -81,8 +81,8 @@ pub fn setup_contemporary(cx: &mut App, mut application: Contemporary) {
     cx.on_action(debug_log);
     cx.bind_keys([KeyBinding::new("cmd-h", HideSelf, None)]);
     cx.bind_keys([KeyBinding::new("cmd-alt-h", HideOthers, None)]);
-    cx.bind_keys([KeyBinding::new("secondary-q", Quit, None)]);
-    cx.bind_keys([KeyBinding::new("secondary-,", Settings, None)]);
+    cx.bind_keys([KeyBinding::load("secondary-q", Box::new(Quit), None, false, None, cx).unwrap()]);
+    cx.bind_keys([KeyBinding::load("secondary-,", Box::new(Settings), None, false, None, cx).unwrap()]);
 
     if let Some(link) = application
         .details

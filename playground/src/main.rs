@@ -15,7 +15,7 @@ use contemporary::{
     setup::{Contemporary, ContemporaryMenus, setup_contemporary},
     window::contemporary_window_options,
 };
-use gpui::http_client::{Url, anyhow};
+use gpui::http_client::Url;
 use gpui::private::anyhow;
 use gpui::{
     App, AsyncApp, Bounds, Menu, MenuItem, WeakEntity, WindowBounds, WindowOptions, px, size,

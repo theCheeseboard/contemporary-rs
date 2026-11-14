@@ -431,7 +431,7 @@ impl Locale {
 
     fn human_readable_language_name_internal(of: &Locale, r#in: &Locale) -> String {
         let locale = &r#in.messages_icu;
-        let Ok(display_names) = icu::experimental::displaynames::LanguageDisplayNames::try_new(
+        let Ok(display_names) = icu::experimental::displaynames::multi::LanguageDisplayNames::try_new(
             locale.clone().into(),
             Default::default(),
         ) else {
@@ -468,7 +468,7 @@ impl Locale {
 
     fn human_readable_region_name_internal(of: &Locale, r#in: &Locale) -> Option<String> {
         let locale = &r#in.messages_icu;
-        let Ok(display_names) = icu::experimental::displaynames::RegionDisplayNames::try_new(
+        let Ok(display_names) = icu::experimental::displaynames::multi::RegionDisplayNames::try_new(
             locale.clone().into(),
             Default::default(),
         ) else {
