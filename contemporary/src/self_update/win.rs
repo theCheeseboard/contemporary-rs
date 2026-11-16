@@ -1,9 +1,7 @@
+use anyhow::anyhow;
 use std::fs;
 use std::path::PathBuf;
-use std::process::{exit, Command, Stdio};
-use gpui::http_client::anyhow;
-use gpui::private::anyhow;
-use gpui::private::anyhow::Context;
+use std::process::{Command, Stdio, exit};
 
 const RESTART_SCRIPT: &str = include_str!("win/restart.ps1");
 

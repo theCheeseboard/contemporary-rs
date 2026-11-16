@@ -1,6 +1,5 @@
-use gpui::http_client::anyhow;
-use gpui::private::anyhow;
-use gpui::private::anyhow::{Context, ensure};
+use anyhow::anyhow;
+use anyhow::anyhow::{Context, ensure};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
