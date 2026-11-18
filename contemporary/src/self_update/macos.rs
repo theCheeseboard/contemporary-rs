@@ -1,5 +1,4 @@
-use anyhow::anyhow;
-use anyhow::anyhow::{Context, ensure};
+use anyhow::{Context, anyhow, ensure};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
