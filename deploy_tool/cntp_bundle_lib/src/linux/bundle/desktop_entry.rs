@@ -26,13 +26,24 @@ pub fn generate_desktop_entry(
         exit(1);
     };
 
+    let url_schemes = deployment.handled_url_schemes.unwrap_or_default();
+    let file_mime_types = deployment.handled_mime_types.unwrap_or_default();
+
+    // Without a field code, launchers drop the files or URLs being opened. %U also covers local
+    // files (passed as file:// URLs), so it takes precedence when URL schemes are handled.
+    let executable = executable_path.file_name().unwrap().to_str().unwrap();
+    let exec = if !url_schemes.is_empty() {
+        format!("{executable} %U")
+    } else if !file_mime_types.is_empty() {
+        format!("{executable} %F")
+    } else {
+        executable.to_string()
+    };
+
     let mut entry = DesktopEntry::new();
     entry.push_line_invariant("Type", "Application")?;
     entry.push_line_invariant("Version", "1.0")?;
-    entry.push_line_invariant(
-        "Exec",
-        executable_path.file_name().unwrap().to_str().unwrap(),
-    )?;
+    entry.push_line_invariant("Exec", &exec)?;
     entry.push_line_invariant("Icon", &desktop_entry)?;
     entry.push_line("Name", &application_name)?;
 
@@ -42,11 +53,10 @@ pub fn generate_desktop_entry(
 
     entry.push_line_invariant("Categories", &(desktop_entry_categories.join(";") + ";"))?;
 
-    let mime_types = deployment
-        .handled_url_schemes
-        .unwrap_or_default()
+    let mime_types = url_schemes
         .iter()
         .map(|scheme| format!("x-scheme-handler/{}", scheme))
+        .chain(file_mime_types)
         .collect::<Vec<_>>();
     if !mime_types.is_empty() {
         entry.push_line_invariant("MimeType", &(mime_types.join(";") + ";"))?;
