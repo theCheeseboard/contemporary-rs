@@ -26,6 +26,7 @@ pub struct ContemporaryConfigDeploymentDef {
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,
+    pub handled_mime_types: Option<Vec<String>>,
     pub appstream_metainfo_file: Option<String>,
 
     // macOS only
@@ -51,6 +52,7 @@ pub struct ContemporaryConfigDeployment {
 
     // Linux only
     pub desktop_entry_categories: Option<Vec<String>>,
+    pub handled_mime_types: Option<Vec<String>>,
     pub appstream_metainfo_file: Option<String>,
 
     // macOS only

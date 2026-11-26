@@ -180,6 +180,9 @@ impl ContemporaryConfig {
             desktop_entry_categories: specific_deployment
                 .desktop_entry_categories
                 .or(deployment.desktop_entry_categories),
+            handled_mime_types: specific_deployment
+                .handled_mime_types
+                .or(deployment.handled_mime_types),
             appstream_metainfo_file: specific_deployment
                 .appstream_metainfo_file
                 .or(deployment.appstream_metainfo_file),
